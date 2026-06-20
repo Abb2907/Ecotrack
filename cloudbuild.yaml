@@ -72,23 +72,19 @@ steps:
     name: "gcr.io/cloud-builders/docker"
     dir: "frontend"
     waitFor: ["backend-test"]   # Frontend build can run in parallel with backend image build
+    entrypoint: "sh"
     args:
-      - "build"
-      - "--build-arg"
-      - "NEXT_PUBLIC_FIREBASE_API_KEY=$$FIREBASE_API_KEY"
-      - "--build-arg"
-      - "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=$_PROJECT_ID.firebaseapp.com"
-      - "--build-arg"
-      - "NEXT_PUBLIC_FIREBASE_PROJECT_ID=$_PROJECT_ID"
-      - "--build-arg"
-      - "NEXT_PUBLIC_FIREBASE_APP_ID=$$FIREBASE_APP_ID"
-      - "--build-arg"
-      - "NEXT_PUBLIC_BACKEND_URL=https://$_BACKEND_SERVICE-$_PROJECT_ID.$_REGION.run.app"
-      - "-t"
-      - "$_REGISTRY/$_PROJECT_ID/$_REPO/frontend:$SHORT_SHA"
-      - "-t"
-      - "$_REGISTRY/$_PROJECT_ID/$_REPO/frontend:latest"
-      - "."
+      - "-c"
+      - |
+        docker build \
+          --build-arg NEXT_PUBLIC_FIREBASE_API_KEY="$$FIREBASE_API_KEY" \
+          --build-arg NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN="$_PROJECT_ID.firebaseapp.com" \
+          --build-arg NEXT_PUBLIC_FIREBASE_PROJECT_ID="$_PROJECT_ID" \
+          --build-arg NEXT_PUBLIC_FIREBASE_APP_ID="$$FIREBASE_APP_ID" \
+          --build-arg NEXT_PUBLIC_BACKEND_URL="https://$_BACKEND_SERVICE-$_PROJECT_ID.$_REGION.run.app" \
+          -t "$_REGISTRY/$_PROJECT_ID/$_REPO/frontend:$SHORT_SHA" \
+          -t "$_REGISTRY/$_PROJECT_ID/$_REPO/frontend:latest" \
+          .
     secretEnv: ["FIREBASE_API_KEY", "FIREBASE_APP_ID"]
 
   # ─────────────────────────────────────────────────
