@@ -13,6 +13,7 @@ EcoTrack is a production-grade web application to help individuals understand, t
 - **Auth**: Firebase Authentication (Google Sign-In, Email/Password)
 - **CI/CD**: Cloud Build (Automated Dockerization & Deployment)
 - **Hosting**: Google Cloud Run (Fully managed serverless container runtime)
+- **Code Quality & Testing**: Jest, RTL, Pytest, Ruff, ESLint, Prettier
 
 ## Project Architecture
 The project follows a modern microservices architecture, heavily utilizing Google Cloud Platform (GCP):
@@ -75,3 +76,18 @@ The application uses **Cloud Build** triggered natively from the repository or v
 gcloud builds submit --config cloudbuild.yaml
 ```
 Refer to `infrastructure/gcp_provision.sh` for initial Google Cloud Platform resources provisioning.
+
+## Testing & Code Quality
+EcoTrack maintains high code quality and test coverage through robust tooling:
+
+- **Frontend Testing**: Uses Jest and React Testing Library (RTL). Execute tests locally via `npm run test` in the `frontend/` directory.
+- **Backend Testing**: Uses Pytest with XML coverage reporting (`pytest --cov-report=xml`).
+- **Linting & Formatting**: 
+  - **Frontend**: Enforced using ESLint (with `next/core-web-vitals` and `jsx-a11y` accessibility plugins) and Prettier.
+  - **Backend**: Managed via Ruff (configured in `pyproject.toml` for strict modern standards) and MyPy.
+
+## Accessibility (WCAG)
+EcoTrack is designed to be accessible to all users:
+- Semantic HTML tags and ARIA labels are meticulously implemented across UI components.
+- Integrated `eslint-plugin-jsx-a11y` guarantees continuous testing against key Web Content Accessibility Guidelines (WCAG) standards during CI pipelines.
+- Images rely on optimized `next/image` with strictly enforced `alt` descriptors.
