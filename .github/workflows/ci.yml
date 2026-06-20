@@ -126,6 +126,11 @@ jobs:
       - name: Build frontend
         run: npm run build
         working-directory: ./frontend
+        env:
+          NEXT_PUBLIC_FIREBASE_API_KEY: dummy-api-key
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: dummy-project-id
+          NEXT_PUBLIC_FIREBASE_APP_ID: dummy-app-id
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: dummy-auth-domain
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v10
         with:
