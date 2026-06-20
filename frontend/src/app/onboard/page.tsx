@@ -34,7 +34,7 @@ const ENERGY_OPTIONS = [
 ];
 
 const DIET_OPTIONS = [
-  { label: "Meat-heavy (beef most days)", value: 7.2 },
+  { label: "Meat-heavy (most days)", value: 7.2 },
   { label: "Mixed omnivore (meat a few times a week)", value: 4.5 },
   { label: "Pescatarian (fish, no red meat)", value: 3.0 },
   { label: "Vegetarian (no meat)", value: 2.1 },
