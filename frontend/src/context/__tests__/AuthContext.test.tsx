@@ -3,8 +3,9 @@
  */
 import React from "react";
 import { render, screen, act, waitFor } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import { AuthProvider, useAuth } from "../AuthContext";
-import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
 // Mock Firebase Auth
 jest.mock("firebase/auth", () => ({
@@ -51,7 +52,7 @@ describe("AuthContext", () => {
   });
 
   it("should update user state when onAuthStateChanged triggers with a user", async () => {
-    (onAuthStateChanged as jest.Mock).mockImplementation((auth, callback) => {
+    (onAuthStateChanged as jest.Mock).mockImplementation((_auth: any, callback: any) => {
       // Trigger callback immediately with a mock user
       callback({
         uid: "123",
@@ -73,7 +74,7 @@ describe("AuthContext", () => {
   });
 
   it("should handle loginAsGuest", async () => {
-    (onAuthStateChanged as jest.Mock).mockImplementation((auth, callback) => {
+    (onAuthStateChanged as jest.Mock).mockImplementation((_auth: any, callback: any) => {
       callback(null); // No firebase user initially
       return jest.fn();
     });
@@ -99,7 +100,7 @@ describe("AuthContext", () => {
   });
 
   it("should handle logout", async () => {
-    (onAuthStateChanged as jest.Mock).mockImplementation((auth, callback) => {
+    (onAuthStateChanged as jest.Mock).mockImplementation((_auth: any, callback: any) => {
       callback({
         uid: "123",
         email: "test@user.com",
