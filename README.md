@@ -1,5 +1,12 @@
 # EcoTrack
 
+[![Build Status](https://img.shields.io/github/actions/workflow/status/Abb2907/Ecotrack/ci.yml?branch=main)](https://github.com/Abb2907/Ecotrack/actions)
+[![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen.svg)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Lint: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![TypeScript: Strict](https://img.shields.io/badge/TypeScript-Strict-blue.svg)](https://www.typescriptlang.org/)
+
 ![EcoTrack Screenshot](./docs/screenshot.png)
 
 EcoTrack is a production-grade web application to help individuals understand, track, and reduce their carbon footprint.
