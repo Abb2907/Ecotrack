@@ -278,7 +278,7 @@ export default function Dashboard() {
           
           {logs.length === 0 ? (
             <div className="py-8 text-center text-brand-muted text-sm font-semibold">
-              No actions logged yet. Go to "Log Activity" to start.
+              No actions logged yet. Go to &quot;Log Activity&quot; to start.
             </div>
           ) : (
             <div className="overflow-x-auto">

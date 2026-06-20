@@ -143,7 +143,7 @@ export default function InsightsPage() {
           </div>
           <h2 className="text-xl font-bold text-brand-text mb-2">No Insights Generated Yet</h2>
           <p className="text-brand-muted text-sm max-w-md mx-auto mb-6">
-            Click "Generate My Insights" to let Google Gemini analyse your activity logs and produce a personalised sustainability action plan.
+            Click &quot;Generate My Insights&quot; to let Google Gemini analyse your activity logs and produce a personalised sustainability action plan.
           </p>
           <Button onClick={handleGenerate} loading={generating} icon={<Sparkles className="h-4 w-4" />}>
             Generate My Insights

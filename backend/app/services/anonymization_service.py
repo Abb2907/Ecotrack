@@ -1,14 +1,16 @@
 import hashlib
 import hmac
-from typing import Optional
+
 from google.cloud import secretmanager
+
 from app.core.config import settings
+
 
 class AnonymizationService:
     def __init__(self) -> None:
         self.project_id = settings.PROJECT_ID
         self.secret_name = settings.ANONYMIZATION_KEY_SECRET_NAME
-        self._cached_key: Optional[bytes] = None
+        self._cached_key: bytes | None = None
 
     async def _get_secret_key(self) -> bytes:
         if self._cached_key is not None:
@@ -22,7 +24,9 @@ class AnonymizationService:
         try:
             client = secretmanager.SecretManagerServiceClient()
             # Fetch latest version of the secret key
-            name = f"projects/{self.project_id}/secrets/{self.secret_name}/versions/latest"
+            name = (
+                f"projects/{self.project_id}/secrets/{self.secret_name}/versions/latest"
+            )
             response = client.access_secret_version(request={"name": name})
             self._cached_key = response.payload.data
             return self._cached_key

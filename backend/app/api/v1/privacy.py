@@ -1,16 +1,19 @@
-from fastapi import APIRouter, Depends, HTTPException, status
 from datetime import datetime, timedelta
-from typing import Dict, Any
-from app.core.security import get_current_user, RoleChecker
+from typing import Any
+
+from fastapi import APIRouter, Depends, HTTPException, status
+
+from app.core.security import RoleChecker, get_current_user
 from app.repositories.user_repository import UserRepository
 
 router = APIRouter(prefix="/privacy", tags=["GDPR & Privacy Compliance"])
 
-@router.get("/export", response_model=Dict[str, Any])
+
+@router.get("/export", response_model=dict[str, Any])
 async def export_my_data(
-    current_user_claims: Dict[str, str] = Depends(get_current_user),
-    user_repo: UserRepository = Depends(UserRepository)
-) -> Dict[str, Any]:
+    current_user_claims: dict[str, str] = Depends(get_current_user),
+    user_repo: UserRepository = Depends(UserRepository),
+) -> dict[str, Any]:
     """
     Self-serve GDPR Data Portability. Exports all user data including profile records,
     carbon baseline settings, daily activity logs, and Vertex AI recommendation histories.
@@ -20,15 +23,16 @@ async def export_my_data(
     if not data:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="No user data found to export."
+            detail="No user data found to export.",
         )
     return data
 
+
 @router.post("/delete", status_code=status.HTTP_202_ACCEPTED)
 async def schedule_account_deletion(
-    current_user_claims: Dict[str, str] = Depends(get_current_user),
-    user_repo: UserRepository = Depends(UserRepository)
-) -> Dict[str, Any]:
+    current_user_claims: dict[str, str] = Depends(get_current_user),
+    user_repo: UserRepository = Depends(UserRepository),
+) -> dict[str, Any]:
     """
     Initiate user account deletion. Schedules complete profile and log deletion in 7 days.
     """
@@ -41,14 +45,15 @@ async def schedule_account_deletion(
         "message": "Your account has been scheduled for deletion.",
         "scheduledDeletionDate": purge_date.isoformat(),
         "gracePeriodDays": 7,
-        "instructions": "You can log back in and cancel this request anytime within the next 7 days."
+        "instructions": "You can log back in and cancel this request anytime within the next 7 days.",
     }
+
 
 @router.post("/delete/cancel", status_code=status.HTTP_200_OK)
 async def cancel_account_deletion(
-    current_user_claims: Dict[str, str] = Depends(get_current_user),
-    user_repo: UserRepository = Depends(UserRepository)
-) -> Dict[str, str]:
+    current_user_claims: dict[str, str] = Depends(get_current_user),
+    user_repo: UserRepository = Depends(UserRepository),
+) -> dict[str, str]:
     """
     Cancels a pending account deletion request and restores active account status.
     """
@@ -57,16 +62,21 @@ async def cancel_account_deletion(
     if not user or not user.deletionRequested:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No active deletion request exists for this account."
+            detail="No active deletion request exists for this account.",
         )
 
     await user_repo.cancel_deletion(uid)
     return {"message": "Your account deletion request has been canceled successfully."}
 
-@router.post("/purge", dependencies=[Depends(RoleChecker(["admin", "super_admin"]))], status_code=status.HTTP_200_OK)
+
+@router.post(
+    "/purge",
+    dependencies=[Depends(RoleChecker(["admin", "super_admin"]))],
+    status_code=status.HTTP_200_OK,
+)
 async def trigger_user_purge(
-    user_repo: UserRepository = Depends(UserRepository)
-) -> Dict[str, Any]:
+    user_repo: UserRepository = Depends(UserRepository),
+) -> dict[str, Any]:
     """
     Admin-only endpoint to process and permanently purge scheduled deletion requests older than 7 days.
     """
@@ -74,5 +84,5 @@ async def trigger_user_purge(
     return {
         "status": "success",
         "purgedAccountsCount": purged_count,
-        "timestamp": datetime.utcnow().isoformat()
+        "timestamp": datetime.utcnow().isoformat(),
     }

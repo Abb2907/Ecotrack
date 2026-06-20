@@ -173,10 +173,11 @@ export default function CalculatorPage() {
             {activeTab === "transport" && (
               <div className="space-y-4">
                 <div>
-                  <label className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
+                  <label htmlFor="distance" className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
                     Distance (km)
                   </label>
                   <input
+                    id="distance"
                     type="number"
                     min={1}
                     value={distance}
@@ -185,10 +186,10 @@ export default function CalculatorPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
+                  <div id="transport-mode" className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
                     Transport Mode
-                  </label>
-                  <div className="space-y-2">
+                  </div>
+                  <div role="group" aria-labelledby="transport-mode" className="space-y-2">
                     {TRANSPORT_MODES.map((m) => (
                       <button
                         key={m.value}
@@ -214,10 +215,11 @@ export default function CalculatorPage() {
             {activeTab === "energy" && (
               <div className="space-y-4">
                 <div>
-                  <label className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
+                  <label htmlFor="energy-usage" className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
                     Energy Usage (kWh)
                   </label>
                   <input
+                    id="energy-usage"
                     type="number"
                     min={1}
                     value={kwh}
@@ -226,10 +228,10 @@ export default function CalculatorPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
+                  <div id="energy-source" className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
                     Energy Source
-                  </label>
-                  <div className="space-y-2">
+                  </div>
+                  <div role="group" aria-labelledby="energy-source" className="space-y-2">
                     {ENERGY_SOURCES.map((s) => (
                       <button
                         key={s.value}
@@ -255,10 +257,11 @@ export default function CalculatorPage() {
             {activeTab === "diet" && (
               <div className="space-y-4">
                 <div>
-                  <label className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
+                  <label htmlFor="meals" className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
                     Number of Meals
                   </label>
                   <input
+                    id="meals"
                     type="number"
                     min={1}
                     value={meals}
@@ -267,10 +270,10 @@ export default function CalculatorPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
+                  <div id="diet-type" className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
                     Diet Type
-                  </label>
-                  <div className="space-y-2">
+                  </div>
+                  <div role="group" aria-labelledby="diet-type" className="space-y-2">
                     {DIET_TYPES.map((d) => (
                       <button
                         key={d.value}

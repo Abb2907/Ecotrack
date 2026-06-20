@@ -1,6 +1,7 @@
 from datetime import datetime
-from typing import Optional
+
 from pydantic import BaseModel, EmailStr, Field
+
 
 class CarbonBaseline(BaseModel):
     transport: float = 0.0
@@ -8,14 +9,17 @@ class CarbonBaseline(BaseModel):
     diet: float = 0.0
     total: float = 0.0
 
+
 class ConsentInfo(BaseModel):
     dataProcessingAccepted: bool
     consentTimestamp: datetime
     consentVersion: str
 
+
 class UserPreferences(BaseModel):
     theme: str = "dark"
     emailNotifications: bool = True
+
 
 class User(BaseModel):
     userId: str = Field(..., description="Firebase Auth UID")
@@ -27,4 +31,4 @@ class User(BaseModel):
     carbonBaseline: CarbonBaseline = Field(default_factory=CarbonBaseline)
     preferences: UserPreferences = Field(default_factory=UserPreferences)
     consent: ConsentInfo
-    deletionRequested: Optional[datetime] = None
+    deletionRequested: datetime | None = None

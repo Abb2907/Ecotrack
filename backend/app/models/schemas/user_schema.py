@@ -1,17 +1,21 @@
 from datetime import datetime
-from typing import Optional
+
 from pydantic import BaseModel, EmailStr
-from app.models.domain.user import CarbonBaseline, UserPreferences, ConsentInfo
+
+from app.models.domain.user import CarbonBaseline, ConsentInfo, UserPreferences
+
 
 class UserCreate(BaseModel):
     email: EmailStr
     displayName: str
     consent: ConsentInfo
 
+
 class BaselineUpdate(BaseModel):
     transport: float
     energy: float
     diet: float
+
 
 class UserResponse(BaseModel):
     userId: str
@@ -23,4 +27,4 @@ class UserResponse(BaseModel):
     carbonBaseline: CarbonBaseline
     preferences: UserPreferences
     consent: ConsentInfo
-    deletionRequested: Optional[datetime] = None
+    deletionRequested: datetime | None = None

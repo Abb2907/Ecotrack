@@ -1,4 +1,5 @@
 from google.cloud import firestore
+
 from app.core.config import settings
 
 # Initializes the asynchronous Firestore client

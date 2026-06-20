@@ -1,15 +1,17 @@
 import os
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.core.config import settings
-from app.repositories.action_repository import ActionRepository
+
+from app.api.v1.actions import router as actions_router
 from app.api.v1.auth import router as auth_router
 from app.api.v1.calculator import router as calculator_router
-from app.api.v1.actions import router as actions_router
 from app.api.v1.insights import router as insights_router
 from app.api.v1.privacy import router as privacy_router
+from app.core.config import settings
+from app.repositories.action_repository import ActionRepository
 
-from contextlib import asynccontextmanager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -23,6 +25,7 @@ async def lifespan(app: FastAPI):
             # Gracefully handle seeding failures if Firestore credentials are not loaded yet
             print(f"Skipping startup DB seeding: {str(e)}")
     yield
+
 
 app = FastAPI(
     title="EcoTrack API",
@@ -48,7 +51,9 @@ if _frontend_url:
 
 # In production on Cloud Run, also accept the auto-generated *.run.app URLs
 if settings.ENVIRONMENT == "production":
-    origins.append(f"https://ecotrack-frontend-{settings.PROJECT_ID}.{settings.REGION}.run.app")
+    origins.append(
+        f"https://ecotrack-frontend-{settings.PROJECT_ID}.{settings.REGION}.run.app"
+    )
     # Allow all Cloud Run origins as the URL pattern may vary
     origins.append(f"https://ecotrack-frontend-361013050235.{settings.REGION}.run.app")
 
@@ -66,6 +71,7 @@ app.include_router(calculator_router, prefix="/api/v1")
 app.include_router(actions_router, prefix="/api/v1")
 app.include_router(insights_router, prefix="/api/v1")
 app.include_router(privacy_router, prefix="/api/v1")
+
 
 @app.get("/health", tags=["Health Check"])
 async def health_check() -> dict[str, str]:

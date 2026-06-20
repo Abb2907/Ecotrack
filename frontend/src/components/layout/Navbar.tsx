@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { useAuth } from "../../context/AuthContext";
 import { Menu, X, Leaf, LogOut, Shield, BarChart3, PlusCircle, Sparkles, Calculator } from "lucide-react";
 
@@ -70,9 +71,11 @@ export const Navbar: React.FC = () => {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   {user.photoURL ? (
-                    <img
+                    <Image
                       src={user.photoURL}
                       alt={user.displayName || "User avatar"}
+                      width={32}
+                      height={32}
                       className="h-8 w-8 rounded-full border border-brand-primary/45"
                     />
                   ) : (
@@ -105,6 +108,7 @@ export const Navbar: React.FC = () => {
           {/* Mobile menu button */}
           <div className="flex md:hidden">
             <button
+              aria-label="Toggle Navigation Menu"
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center p-2 rounded-lg text-brand-muted hover:text-brand-text hover:bg-slate-800/60 focus:outline-none"
             >
@@ -139,7 +143,7 @@ export const Navbar: React.FC = () => {
               <div className="border-t border-slate-800 my-2 pt-2">
                 <div className="flex items-center gap-3 px-3 py-2">
                   {user.photoURL && (
-                    <img src={user.photoURL} alt="User Avatar" className="h-9 w-9 rounded-full" />
+                    <Image src={user.photoURL} alt="User Avatar" width={36} height={36} className="h-9 w-9 rounded-full" />
                   )}
                   <div>
                     <div className="text-sm font-semibold text-brand-text">{user.displayName}</div>

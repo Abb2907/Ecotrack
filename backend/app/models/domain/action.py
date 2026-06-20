@@ -1,7 +1,10 @@
 from pydantic import BaseModel, Field
 
+
 class Action(BaseModel):
-    actionId: str = Field(..., description="Unique Action Catalog ID (e.g. bike_commute)")
+    actionId: str = Field(
+        ..., description="Unique Action Catalog ID (e.g. bike_commute)"
+    )
     title: str
     description: str
     category: str = Field(..., description="transport | energy | diet")

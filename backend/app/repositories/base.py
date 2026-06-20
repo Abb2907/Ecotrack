@@ -1,5 +1,7 @@
 from google.cloud import firestore
+
 from app.core.database import db
+
 
 class BaseRepository:
     def __init__(self) -> None:

@@ -1,5 +1,7 @@
 from datetime import datetime
+
 from pydantic import BaseModel, Field
+
 
 class DailyLog(BaseModel):
     logId: str = Field(..., description="Composite log ID (userId_date_actionId)")

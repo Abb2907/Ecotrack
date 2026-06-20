@@ -150,7 +150,7 @@ export default function LogPage() {
       {/* Stats banner */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <Card className="py-4" hoverable={false}>
-          <p className="text-xs font-bold text-brand-muted uppercase tracking-wider">Today's Total Saved</p>
+          <p className="text-xs font-bold text-brand-muted uppercase tracking-wider">Today&apos;s Total Saved</p>
           <p className="text-2xl font-extrabold text-brand-primary mt-1">
             {logs.filter(l => l.date === date).reduce((a, b) => a + b.co2Reduced, 0).toFixed(2)}{" "}
             <span className="text-xs text-brand-muted font-normal">kg CO₂e</span>
@@ -267,10 +267,11 @@ export default function LogPage() {
 
             {/* Date */}
             <div className="space-y-1 mb-4">
-              <label className="text-xs font-bold text-brand-muted uppercase tracking-wider flex items-center gap-1">
+              <label htmlFor="log-date" className="text-xs font-bold text-brand-muted uppercase tracking-wider flex items-center gap-1">
                 <Calendar className="h-3 w-3" /> Date
               </label>
               <input
+                id="log-date"
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}

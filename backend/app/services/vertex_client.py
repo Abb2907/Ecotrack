@@ -1,25 +1,42 @@
 import json
-from typing import List, Dict, Any
-from pydantic import BaseModel, Field
+from typing import Any
+
 import vertexai
-from vertexai.generative_models import GenerativeModel, GenerationConfig
+from pydantic import BaseModel, Field
+from vertexai.generative_models import GenerationConfig, GenerativeModel
+
 from app.core.config import settings
+
 
 # Recommendation Schema Definition — aligned with frontend API contract
 class RecommendationItem(BaseModel):
     title: str = Field(..., description="Short, action-oriented title.")
-    description: str = Field(..., description="Why it matters, tied directly to the user's highest emission source.")
-    estimatedCO2Reduction: float = Field(..., description="Estimated CO2 reduction in kg/month.")
-    estimatedCostImpact: str = Field(default="", description="Estimated cost savings or expense.")
+    description: str = Field(
+        ...,
+        description="Why it matters, tied directly to the user's highest emission source.",
+    )
+    estimatedCO2Reduction: float = Field(
+        ..., description="Estimated CO2 reduction in kg/month."
+    )
+    estimatedCostImpact: str = Field(
+        default="", description="Estimated cost savings or expense."
+    )
     impact: str = Field(..., description="Impact level: 'high' | 'medium' | 'low'.")
-    difficulty: str = Field(..., description="Difficulty level: 'easy' | 'moderate' | 'hard'.")
+    difficulty: str = Field(
+        ..., description="Difficulty level: 'easy' | 'moderate' | 'hard'."
+    )
     timeframe: str = Field(default="short-term", description="Expected timeframe.")
 
+
 class WeeklyRecommendations(BaseModel):
-    recommendations: List[RecommendationItem] = Field(..., min_length=2, max_length=3)
+    recommendations: list[RecommendationItem] = Field(..., min_length=2, max_length=3)
 
 
 class VertexAIClient:
+    """
+    A client to interact with Google Vertex AI's Generative Models.
+    Responsible for generating personalised sustainability insights based on user data.
+    """
     def __init__(self) -> None:
         self.project_id = settings.PROJECT_ID
         self.location = settings.VERTEX_AI_LOCATION
@@ -36,7 +53,7 @@ class VertexAIClient:
                     raise
 
     async def generate_weekly_recommendations(
-        self, user_baseline: Dict[str, Any], recent_logs: List[Dict[str, Any]]
+        self, user_baseline: dict[str, Any], recent_logs: list[dict[str, Any]]
     ) -> WeeklyRecommendations:
         """
         Uses Vertex AI (Gemini) with structured JSON schema outputs to deliver
@@ -73,19 +90,39 @@ Return recommendations that target their highest emission categories. Ensure the
                         "items": {
                             "type": "OBJECT",
                             "properties": {
-                                "title": {"type": "STRING", "description": "Short, action-oriented title."},
-                                "description": {"type": "STRING", "description": "Why it matters, tied directly to the user's highest emission source."},
+                                "title": {
+                                    "type": "STRING",
+                                    "description": "Short, action-oriented title.",
+                                },
+                                "description": {
+                                    "type": "STRING",
+                                    "description": "Why it matters, tied directly to the user's highest emission source.",
+                                },
                                 "estimatedCO2Reduction": {"type": "NUMBER"},
                                 "estimatedCostImpact": {"type": "STRING"},
-                                "impact": {"type": "STRING", "description": "Impact level: 'high' | 'medium' | 'low'."},
-                                "difficulty": {"type": "STRING", "description": "Difficulty level: 'easy' | 'moderate' | 'hard'."},
+                                "impact": {
+                                    "type": "STRING",
+                                    "description": "Impact level: 'high' | 'medium' | 'low'.",
+                                },
+                                "difficulty": {
+                                    "type": "STRING",
+                                    "description": "Difficulty level: 'easy' | 'moderate' | 'hard'.",
+                                },
                                 "timeframe": {"type": "STRING"},
                             },
-                            "required": ["title", "description", "estimatedCO2Reduction", "estimatedCostImpact", "impact", "difficulty", "timeframe"],
-                        }
+                            "required": [
+                                "title",
+                                "description",
+                                "estimatedCO2Reduction",
+                                "estimatedCostImpact",
+                                "impact",
+                                "difficulty",
+                                "timeframe",
+                            ],
+                        },
                     }
                 },
-                "required": ["recommendations"]
+                "required": ["recommendations"],
             }
 
             response = model.generate_content(
@@ -93,8 +130,8 @@ Return recommendations that target their highest emission categories. Ensure the
                 generation_config=GenerationConfig(
                     response_mime_type="application/json",
                     response_schema=response_schema,
-                    temperature=0.2
-                )
+                    temperature=0.2,
+                ),
             )
 
             data = json.loads(response.text)
@@ -108,7 +145,7 @@ Return recommendations that target their highest emission categories. Ensure the
             return self._generate_mock_recommendations(user_baseline, recent_logs)
 
     def _generate_mock_recommendations(
-        self, user_baseline: Dict[str, Any], recent_logs: List[Dict[str, Any]]
+        self, user_baseline: dict[str, Any], recent_logs: list[dict[str, Any]]
     ) -> WeeklyRecommendations:
         # Determine highest emission source
         baseline = user_baseline.get("carbonBaseline", {})
@@ -127,7 +164,7 @@ Return recommendations that target their highest emission categories. Ensure the
                     estimatedCostImpact="~₹1,200/month savings",
                     impact="high",
                     difficulty="easy",
-                    timeframe="immediate"
+                    timeframe="immediate",
                 )
             )
             recommendations.append(
@@ -138,7 +175,7 @@ Return recommendations that target their highest emission categories. Ensure the
                     estimatedCostImpact="~₹500/month savings",
                     impact="medium",
                     difficulty="moderate",
-                    timeframe="short-term"
+                    timeframe="short-term",
                 )
             )
         elif energy >= transport and energy >= diet:
@@ -150,7 +187,7 @@ Return recommendations that target their highest emission categories. Ensure the
                     estimatedCostImpact="~₹800/month savings",
                     impact="high",
                     difficulty="easy",
-                    timeframe="immediate"
+                    timeframe="immediate",
                 )
             )
             recommendations.append(
@@ -161,7 +198,7 @@ Return recommendations that target their highest emission categories. Ensure the
                     estimatedCostImpact="~₹150/month savings",
                     impact="low",
                     difficulty="easy",
-                    timeframe="short-term"
+                    timeframe="short-term",
                 )
             )
         else:
@@ -173,7 +210,7 @@ Return recommendations that target their highest emission categories. Ensure the
                     estimatedCostImpact="~₹400/month savings",
                     impact="high",
                     difficulty="moderate",
-                    timeframe="immediate"
+                    timeframe="immediate",
                 )
             )
             recommendations.append(
@@ -184,7 +221,7 @@ Return recommendations that target their highest emission categories. Ensure the
                     estimatedCostImpact="~₹300/month savings",
                     impact="medium",
                     difficulty="easy",
-                    timeframe="immediate"
+                    timeframe="immediate",
                 )
             )
 

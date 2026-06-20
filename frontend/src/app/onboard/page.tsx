@@ -145,7 +145,7 @@ export default function OnboardPage() {
             </div>
             <div>
               <h2 className="font-bold text-brand-text">Home Energy Usage</h2>
-              <p className="text-xs text-brand-muted">What best describes your home's energy consumption?</p>
+              <p className="text-xs text-brand-muted">What best describes your home&apos;s energy consumption?</p>
             </div>
           </div>
           <div className="space-y-3">
