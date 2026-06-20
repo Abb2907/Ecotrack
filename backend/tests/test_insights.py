@@ -13,14 +13,14 @@ from app.models.domain.user import CarbonBaseline, ConsentInfo, User
 from app.repositories.action_repository import ActionRepository
 from app.repositories.user_repository import UserRepository
 from app.services.vertex_client import (
+    RecommendationItem,
     VertexAIClient,
     WeeklyRecommendations,
-    RecommendationItem,
 )
 
 
 @pytest.fixture(autouse=True)
-def mock_dependencies() -> Generator[dict[str, AsyncMock], None, None]:
+def mock_dependencies() -> Generator[dict[str, AsyncMock], None, None]:  # noqa: C901
     """Provide mocked dependencies for insights endpoints."""
     mock_user_repo = AsyncMock(spec=UserRepository)
     mock_action_repo = AsyncMock(spec=ActionRepository)

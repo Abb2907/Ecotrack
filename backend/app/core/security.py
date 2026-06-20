@@ -5,6 +5,7 @@ user identity extraction, and role-based access control (RBAC).
 """
 
 import time
+from typing import Any
 
 import httpx
 from fastapi import Depends, HTTPException, status
@@ -51,10 +52,6 @@ async def get_firebase_public_keys() -> dict[str, str]:
                     detail="Failed to fetch Firebase public authentication certificates",
                 )
     return keys_cache
-
-
-from typing import Any
-
 
 async def verify_firebase_token(token: str) -> dict[str, Any]:
     """Decode and verify a Firebase ID token.
