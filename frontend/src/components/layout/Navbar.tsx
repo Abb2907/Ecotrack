@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
-import { Menu, X, Leaf, LogOut, Shield, BarChart3, PlusCircle, Sparkles } from "lucide-react";
+import { Menu, X, Leaf, LogOut, Shield, BarChart3, PlusCircle, Sparkles, Calculator } from "lucide-react";
 
 export const Navbar: React.FC = () => {
   const { user, loginWithGoogle, logout } = useAuth();
@@ -14,6 +14,7 @@ export const Navbar: React.FC = () => {
   const navigation = [
     { name: "Dashboard", href: "/", icon: BarChart3 },
     { name: "Log Activity", href: "/log", icon: PlusCircle },
+    { name: "Calculator", href: "/calculator", icon: Calculator },
     { name: "AI Insights", href: "/insights", icon: Sparkles },
     { name: "Privacy", href: "/privacy", icon: Shield },
   ];

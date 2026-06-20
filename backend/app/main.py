@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Depends
+import os
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.repositories.action_repository import ActionRepository
@@ -33,11 +34,23 @@ app = FastAPI(
 )
 
 # Configure CORS middleware
-# Adjust origins in production deployment
+# In production, allow the deployed Cloud Run frontend origin.
+# In development, allow all localhost variants.
+_frontend_url = os.environ.get("FRONTEND_URL", "")
 origins = [
     "http://localhost:3000",
     "https://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://127.0.0.1:3000",
 ]
+if _frontend_url:
+    origins.append(_frontend_url)
+
+# In production on Cloud Run, also accept the auto-generated *.run.app URLs
+if settings.ENVIRONMENT == "production":
+    origins.append(f"https://ecotrack-frontend-{settings.PROJECT_ID}.{settings.REGION}.run.app")
+    # Allow all Cloud Run origins as the URL pattern may vary
+    origins.append(f"https://ecotrack-frontend-361013050235.{settings.REGION}.run.app")
 
 app.add_middleware(
     CORSMiddleware,

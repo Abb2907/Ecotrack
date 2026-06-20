@@ -3,7 +3,10 @@ import { auth } from "./firebase";
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
 
 async function getHeaders(): Promise<HeadersInit> {
-  const token = auth.currentUser ? await auth.currentUser.getIdToken() : null;
+  let token = auth.currentUser ? await auth.currentUser.getIdToken() : null;
+  if (!token && typeof window !== "undefined") {
+    token = localStorage.getItem("ecotrack_mock_token");
+  }
   const headers: HeadersInit = {
     "Content-Type": "application/json",
   };

@@ -16,7 +16,7 @@ async def get_action_catalog(
 ) -> List[ActionResponse]:
     # Seed default actions if catalog is empty
     await action_repo.seed_default_actions()
-    
+
     actions = await action_repo.get_actions(category)
     return [ActionResponse(**a.model_dump()) for a in actions]
 
@@ -27,7 +27,7 @@ async def log_daily_action(
     action_repo: ActionRepository = Depends(ActionRepository)
 ) -> LogResponse:
     uid = current_user_claims["uid"]
-    
+
     # 1. Fetch action to retrieve conversion factors
     action = await action_repo.get_action(payload.actionId)
     if not action:
@@ -35,13 +35,13 @@ async def log_daily_action(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Action catalog item '{payload.actionId}' not found."
         )
-        
+
     # 2. Compute the exact carbon footprint reduction
     co2_reduced = round(action.baseReduction * payload.quantity, 4)
-    
+
     # 3. Formulate the composite log ID
     log_id = f"{uid}_{payload.date}_{payload.actionId}"
-    
+
     new_log = DailyLog(
         logId=log_id,
         userId=uid,
@@ -51,7 +51,7 @@ async def log_daily_action(
         quantity=payload.quantity,
         co2Reduced=co2_reduced
     )
-    
+
     # 4. Save to Firestore
     await action_repo.log_reduction(new_log)
     return LogResponse(**new_log.model_dump())
@@ -80,12 +80,12 @@ async def delete_logged_action(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Logged action item not found."
         )
-        
+
     # Security: Verify that the log belongs to the authenticated user
     if log.userId != uid:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access Denied: You cannot delete another user's activity log"
         )
-        
+
     await action_repo.delete_log(logId)

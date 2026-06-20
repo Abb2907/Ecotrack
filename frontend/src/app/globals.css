@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,7 +10,7 @@
 body {
   color: var(--foreground);
   background-color: var(--background);
-  font-family: 'Outfit', 'Inter', sans-serif;
+  font-family: var(--font-outfit), var(--font-inter), sans-serif;
   overflow-x: hidden;
 }
 

@@ -75,23 +75,23 @@ class UserRepository(BaseRepository):
 
         async for doc in users_to_delete:
             user_id = doc.id
-            
+
             # Start a transaction or batch to delete associated documents
             batch = self.db.batch()
-            
+
             # 1. Delete all user logs
             user_logs = self.logs_ref.where("userId", "==", user_id).stream()
             async for log_doc in user_logs:
                 batch.delete(log_doc.reference)
-                
+
             # 2. Delete weekly insights
             user_insights = self.insights_ref.where("userId", "==", user_id).stream()
             async for insight_doc in user_insights:
                 batch.delete(insight_doc.reference)
-                
+
             # 3. Delete user profile itself
             batch.delete(doc.reference)
-            
+
             await batch.commit()
             purged_count += 1
 

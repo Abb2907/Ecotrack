@@ -50,7 +50,7 @@ class VertexAIClient:
 
         try:
             # Setup Vertex AI Gemini Model
-            model = GenerativeModel("gemini-1.5-pro-preview-0409")
+            model = GenerativeModel("gemini-2.0-flash")
 
             # Formulate the prompt
             prompt = f"""Analyze this user's current carbon baseline and recent weekly actions to generate 2 to 3 tailored recommendations.

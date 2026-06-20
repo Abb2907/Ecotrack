@@ -35,7 +35,7 @@ async def schedule_account_deletion(
     uid = current_user_claims["uid"]
     deletion_time = await user_repo.flag_for_deletion(uid)
     purge_date = deletion_time + timedelta(days=7)
-    
+
     return {
         "status": "deletion_scheduled",
         "message": "Your account has been scheduled for deletion.",
@@ -59,7 +59,7 @@ async def cancel_account_deletion(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="No active deletion request exists for this account."
         )
-        
+
     await user_repo.cancel_deletion(uid)
     return {"message": "Your account deletion request has been canceled successfully."}
 

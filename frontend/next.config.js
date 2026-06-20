@@ -2,10 +2,12 @@
 const nextConfig = {
   output: "standalone",
   images: {
-    domains: ["lh3.googleusercontent.com"], // Allow Google profile photos
-  },
-  experimental: {
-    serverComponentsExternalPackages: [],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+    ],
   },
 };
 

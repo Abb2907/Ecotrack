@@ -3,13 +3,29 @@ import type { Metadata } from "next";
 import { AuthProvider } from "../context/AuthContext";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
+import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-outfit",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: "EcoTrack | Carbon Footprint Tracker & AI Reduction Advisor",
   description: "Secure, accessible, and performant application to track personal daily carbon emissions and get personalized AI-driven sustainability recommendations.",
   keywords: "sustainability, carbon footprint, carbon reduction, climate change, personal emissions tracking",
   authors: [{ name: "EcoTrack Team" }],
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -18,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`dark ${outfit.variable} ${inter.variable}`}>
       <body className="flex flex-col min-h-screen bg-brand-dark text-brand-text antialiased">
         <AuthProvider>
           <Navbar />

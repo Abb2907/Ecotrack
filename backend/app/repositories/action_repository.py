@@ -10,7 +10,7 @@ class ActionRepository(BaseRepository):
         query = self.actions_ref
         if category:
             query = query.where("category", "==", category)
-        
+
         async for doc in query.stream():
             data = doc.to_dict()
             if data:
@@ -88,7 +88,7 @@ class ActionRepository(BaseRepository):
                 estimatedSavings=40.0
             )
         ]
-        
+
         for action in defaults:
             # Only write if it does not exist already
             doc_ref = self.actions_ref.document(action.actionId)
@@ -105,7 +105,7 @@ class ActionRepository(BaseRepository):
         logs: List[DailyLog] = []
         # Uses index mapping: userId -> date (descending) -> createdAt (descending)
         query = self.logs_ref.where("userId", "==", user_id).order_by("date", direction="DESCENDING").order_by("createdAt", direction="DESCENDING")
-        
+
         if offset:
             # Pagination cursor handling
             cursor_doc = await self.logs_ref.document(offset).get()
@@ -113,7 +113,7 @@ class ActionRepository(BaseRepository):
                 query = query.start_after(cursor_doc)
 
         query = query.limit(limit)
-        
+
         async for doc in query.stream():
             data = doc.to_dict()
             if data:

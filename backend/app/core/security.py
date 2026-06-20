@@ -1,5 +1,5 @@
 import time
-from typing import Dict, Optional
+from typing import Dict
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import httpx
@@ -18,7 +18,7 @@ keys_cache_expiry: float = 0.0
 async def get_firebase_public_keys() -> Dict[str, str]:
     global keys_cache, keys_cache_expiry
     now = time.time()
-    
+
     # Refresh cache if empty or expired
     if not keys_cache or now > keys_cache_expiry:
         async with httpx.AsyncClient() as client:
@@ -36,7 +36,7 @@ async def get_firebase_public_keys() -> Dict[str, str]:
 
 async def verify_firebase_token(token: str) -> Dict[str, str]:
     public_keys = await get_firebase_public_keys()
-    
+
     try:
         # Get the unverified header to locate the kid (Key ID)
         header = jwt.get_unverified_header(token)
@@ -46,7 +46,7 @@ async def verify_firebase_token(token: str) -> Dict[str, str]:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid token header credentials"
             )
-        
+
         # Decode and verify token
         public_key = public_keys[kid]
         payload = jwt.decode(
@@ -82,7 +82,7 @@ async def get_current_user(
             "name": "Mock User",
             "role": "user"
         }
-        
+
     payload = await verify_firebase_token(token)
     return {
         "uid": payload.get("sub", ""),

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import Dict
 from app.core.security import get_current_user
-from app.models.domain.user import User, CarbonBaseline, ConsentInfo, UserPreferences
+from app.models.domain.user import User, CarbonBaseline, UserPreferences
 from app.models.schemas.user_schema import UserCreate, UserResponse, BaselineUpdate
 from app.repositories.user_repository import UserRepository
 
@@ -14,7 +14,7 @@ async def register_user(
     user_repo: UserRepository = Depends(UserRepository)
 ) -> UserResponse:
     uid = current_user_claims["uid"]
-    
+
     # Check if user already exists
     existing_user = await user_repo.get_user(uid)
     if existing_user:
@@ -39,7 +39,7 @@ async def register_user(
         preferences=UserPreferences(theme="dark", emailNotifications=True),
         consent=payload.consent
     )
-    
+
     await user_repo.create_user(new_user)
     return UserResponse(**new_user.model_dump())
 
@@ -70,7 +70,7 @@ async def update_my_baseline(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User profile not found."
         )
-    
+
     total = payload.transport + payload.energy + payload.diet
     new_baseline = CarbonBaseline(
         transport=payload.transport,
@@ -78,9 +78,9 @@ async def update_my_baseline(
         diet=payload.diet,
         total=total
     )
-    
+
     await user_repo.update_baseline(uid, new_baseline)
-    
+
     updated_user = await user_repo.get_user(uid)
     if not updated_user:
         raise HTTPException(

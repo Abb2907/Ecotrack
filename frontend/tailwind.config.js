@@ -12,12 +12,12 @@ module.exports = {
           dark: "#080c14",
           card: "#0f1626",
           border: "#1e293b",
-          primary: "#10b981",    # Emerald
-          secondary: "#06b6d4",  # Teal/Cyan
-          accent: "#f59e0b",     # Amber
-          error: "#ef4444",      # Red
-          text: "#f8fafc",       # Slate 50
-          muted: "#94a3b8",      # Slate 400
+          primary: "#10b981",    // Emerald
+          secondary: "#06b6d4",  // Teal/Cyan
+          accent: "#f59e0b",     // Amber
+          error: "#ef4444",      // Red
+          text: "#f8fafc",       // Slate 50
+          muted: "#94a3b8",      // Slate 400
         }
       },
       fontFamily: {

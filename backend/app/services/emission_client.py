@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Dict
 import httpx
 from app.core.config import settings
 
@@ -86,7 +85,7 @@ class ClimatiqEmissionClient(BaseEmissionClient):
             "train": "passenger_vehicle-vehicle_type_train-fuel_source_na-engine_size_na"
         }
         activity_id = mapping.get(mode, "passenger_vehicle-vehicle_type_car-fuel_source_petrol-engine_size_na")
-        
+
         async with httpx.AsyncClient() as client:
             try:
                 response = await client.post(
@@ -101,7 +100,7 @@ class ClimatiqEmissionClient(BaseEmissionClient):
                     return float(response.json().get("co2e", 0.0))
             except Exception:
                 pass
-        
+
         # Graceful fallback to mock calculation in case of network or quota errors
         mock = MockEmissionClient()
         return await mock.calculate_transport_emissions(distance_km, mode)
@@ -122,7 +121,7 @@ class ClimatiqEmissionClient(BaseEmissionClient):
                     return float(response.json().get("co2e", 0.0))
             except Exception:
                 pass
-        
+
         mock = MockEmissionClient()
         return await mock.calculate_energy_emissions(kwh, source)
 
