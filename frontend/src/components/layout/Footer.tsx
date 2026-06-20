@@ -1,6 +1,14 @@
 import React from "react";
 import { Leaf } from "lucide-react";
 
+/**
+ * Application footer component.
+ *
+ * Displays the EcoTrack brand, copyright information, and links
+ * to privacy policy, GDPR portability, and terms of use.
+ *
+ * @returns The rendered footer element.
+ */
 export const Footer: React.FC = () => {
   return (
     <footer className="w-full bg-brand-dark/40 border-t border-brand-border py-8 mt-auto">

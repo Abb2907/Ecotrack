@@ -1,3 +1,9 @@
+"""AI-powered sustainability insights API routes.
+
+Provides endpoints for retrieving and generating personalized weekly
+recommendations using Vertex AI (Gemini) based on user activity logs.
+"""
+
 from datetime import datetime, timedelta
 from typing import Any
 
@@ -13,6 +19,7 @@ router = APIRouter(prefix="/insights", tags=["Insights & AI Recommendations"])
 
 # Dependency providers
 def get_vertex_client() -> VertexAIClient:
+    """Dependency provider for the Vertex AI client."""
     return VertexAIClient()
 
 
@@ -21,6 +28,18 @@ async def get_latest_insights(
     current_user_claims: dict[str, str] = Depends(get_current_user),
     user_repo: UserRepository = Depends(UserRepository),
 ) -> dict[str, Any]:
+    """Retrieve the most recent weekly AI-generated insights for the user.
+
+    Args:
+        current_user_claims: Authenticated user identity.
+        user_repo: Injected user repository instance.
+
+    Returns:
+        The latest weekly insight document.
+
+    Raises:
+        HTTPException: If no insights have been generated yet.
+    """
     uid = current_user_claims["uid"]
 
     # Query weekly insights collection for this user, ordered by creation time
@@ -47,6 +66,23 @@ async def generate_insights(
     action_repo: ActionRepository = Depends(ActionRepository),
     vertex_client: VertexAIClient = Depends(get_vertex_client),
 ) -> dict[str, Any]:
+    """Generate fresh weekly sustainability recommendations via Vertex AI.
+
+    Retrieves the user's carbon baseline and 7-day activity logs, submits
+    them to Gemini for analysis, and persists the resulting recommendations.
+
+    Args:
+        current_user_claims: Authenticated user identity.
+        user_repo: Injected user repository instance.
+        action_repo: Injected action repository for log retrieval.
+        vertex_client: Injected Vertex AI client.
+
+    Returns:
+        The generated insight document with recommendations.
+
+    Raises:
+        HTTPException: If the user profile is not found.
+    """
     uid = current_user_claims["uid"]
 
     # 1. Fetch user to retrieve baseline info

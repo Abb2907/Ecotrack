@@ -1,3 +1,9 @@
+"""Authentication and user profile API routes.
+
+Handles user registration, profile retrieval, and carbon baseline
+configuration via Firebase-authenticated endpoints.
+"""
+
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.core.security import get_current_user
@@ -16,6 +22,18 @@ async def register_user(
     current_user_claims: dict[str, str] = Depends(get_current_user),
     user_repo: UserRepository = Depends(UserRepository),
 ) -> UserResponse:
+    """Register a new user or update an existing user's profile.
+
+    If the user already exists, updates display name and email if changed.
+
+    Args:
+        payload: Registration data including email, display name, and consent.
+        current_user_claims: Firebase-verified user identity.
+        user_repo: Injected user repository instance.
+
+    Returns:
+        The created or updated user profile.
+    """
     uid = current_user_claims["uid"]
 
     # Check if user already exists
@@ -52,6 +70,18 @@ async def get_my_profile(
     current_user_claims: dict[str, str] = Depends(get_current_user),
     user_repo: UserRepository = Depends(UserRepository),
 ) -> UserResponse:
+    """Retrieve the authenticated user's profile.
+
+    Args:
+        current_user_claims: Firebase-verified user identity.
+        user_repo: Injected user repository instance.
+
+    Returns:
+        The user's complete profile data.
+
+    Raises:
+        HTTPException: If the user profile does not exist.
+    """
     uid = current_user_claims["uid"]
     user = await user_repo.get_user(uid)
     if not user:
@@ -68,6 +98,21 @@ async def update_my_baseline(
     current_user_claims: dict[str, str] = Depends(get_current_user),
     user_repo: UserRepository = Depends(UserRepository),
 ) -> UserResponse:
+    """Update the user's carbon emission baseline values.
+
+    Recalculates the total baseline from transport, energy, and diet inputs.
+
+    Args:
+        payload: New baseline values for each emission category.
+        current_user_claims: Firebase-verified user identity.
+        user_repo: Injected user repository instance.
+
+    Returns:
+        The updated user profile with new baseline.
+
+    Raises:
+        HTTPException: If the user profile is not found.
+    """
     uid = current_user_claims["uid"]
     user = await user_repo.get_user(uid)
     if not user:

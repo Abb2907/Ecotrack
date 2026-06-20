@@ -1,7 +1,13 @@
 import { auth } from "./firebase";
 
+/** Base URL for the EcoTrack backend API. */
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
 
+/**
+ * Build authorization headers with the current user's ID token.
+ *
+ * @returns A headers object with Content-Type and optional Authorization.
+ */
 async function getHeaders(): Promise<HeadersInit> {
   let token = auth.currentUser ? await auth.currentUser.getIdToken() : null;
   if (!token && typeof window !== "undefined") {
@@ -16,6 +22,7 @@ async function getHeaders(): Promise<HeadersInit> {
   return headers;
 }
 
+/** User profile data returned by the backend. */
 export interface UserProfile {
   userId: string;
   email: string;
@@ -39,6 +46,7 @@ export interface UserProfile {
   deletionRequested?: string | null;
 }
 
+/** Eco-action catalog item. */
 export interface ActionItem {
   actionId: string;
   title: string;
@@ -48,6 +56,7 @@ export interface ActionItem {
   unit: string;
 }
 
+/** Daily activity log entry. */
 export interface DailyLog {
   logId: string;
   actionId: string;
@@ -57,6 +66,7 @@ export interface DailyLog {
   co2Reduced: number;
 }
 
+/** Single AI-generated sustainability recommendation. */
 export interface RecommendationItem {
   title: string;
   impact: "high" | "medium" | "low";
@@ -64,6 +74,7 @@ export interface RecommendationItem {
   description: string;
 }
 
+/** Weekly AI insights collection. */
 export interface WeeklyInsights {
   insightId: string;
   userId: string;
@@ -72,6 +83,11 @@ export interface WeeklyInsights {
   createdAt: string;
 }
 
+/**
+ * Centralized API client for all EcoTrack backend interactions.
+ *
+ * All methods automatically attach the authenticated user's Bearer token.
+ */
 export const api = {
   // Authentication & Profile Endpoints
   async registerUser(displayName: string, email: string): Promise<UserProfile> {

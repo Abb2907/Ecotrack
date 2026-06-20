@@ -1,3 +1,9 @@
+"""User ID anonymization service.
+
+Provides HMAC-SHA256 based anonymization of user IDs for privacy-preserving
+telemetry streaming to BigQuery. Uses Secret Manager in production.
+"""
+
 import hashlib
 import hmac
 
@@ -7,12 +13,26 @@ from app.core.config import settings
 
 
 class AnonymizationService:
+    """Service for anonymizing user identifiers using HMAC-SHA256.
+
+    Retrieves the HMAC key from Google Secret Manager in production,
+    and falls back to a static key in development environments.
+    """
+
     def __init__(self) -> None:
         self.project_id = settings.PROJECT_ID
         self.secret_name = settings.ANONYMIZATION_KEY_SECRET_NAME
         self._cached_key: bytes | None = None
 
     async def _get_secret_key(self) -> bytes:
+        """Retrieve the HMAC secret key from Secret Manager or cache.
+
+        Returns:
+            The secret key as bytes.
+
+        Raises:
+            RuntimeError: If Secret Manager access fails in production.
+        """
         if self._cached_key is not None:
             return self._cached_key
 

@@ -1,11 +1,26 @@
+"""Action catalog and daily log repository.
+
+Manages CRUD operations for the eco-action catalog and user daily
+reduction logs stored in Firestore.
+"""
+
 from app.models.domain.action import Action
 from app.models.domain.log import DailyLog
 from app.repositories.base import BaseRepository
 
 
 class ActionRepository(BaseRepository):
+    """Repository for eco-action catalog and daily reduction log operations."""
     # Catalog operations
     async def get_actions(self, category: str | None = None) -> list[Action]:
+        """Retrieve all actions from the catalog, optionally filtered by category.
+
+        Args:
+            category: Optional category string to filter results.
+
+        Returns:
+            A list of Action domain model instances.
+        """
         actions: list[Action] = []
         query = self.actions_ref
         if category:
@@ -18,6 +33,14 @@ class ActionRepository(BaseRepository):
         return actions
 
     async def get_action(self, action_id: str) -> Action | None:
+        """Retrieve a single action by its catalog ID.
+
+        Args:
+            action_id: The unique action identifier.
+
+        Returns:
+            The Action instance or None if not found.
+        """
         doc = await self.actions_ref.document(action_id).get()
         if doc.exists:
             data = doc.to_dict()
@@ -26,11 +49,23 @@ class ActionRepository(BaseRepository):
         return None
 
     async def create_action(self, action: Action) -> Action:
+        """Persist a new action to the catalog.
+
+        Args:
+            action: The Action domain model to store.
+
+        Returns:
+            The persisted Action instance.
+        """
         await self.actions_ref.document(action.actionId).set(action.model_dump())
         return action
 
     # Seed catalog helper
     async def seed_default_actions(self) -> None:
+        """Populate the catalog with default eco-friendly actions if empty.
+
+        Only writes actions that do not already exist to avoid duplicates.
+        """
         defaults = [
             Action(
                 actionId="bike_commute",
@@ -98,12 +133,30 @@ class ActionRepository(BaseRepository):
 
     # Daily logging operations
     async def log_reduction(self, log: DailyLog) -> DailyLog:
+        """Save a daily reduction log entry to Firestore.
+
+        Args:
+            log: The DailyLog domain model to persist.
+
+        Returns:
+            The persisted DailyLog instance.
+        """
         await self.logs_ref.document(log.logId).set(log.model_dump())
         return log
 
     async def get_user_logs(
         self, user_id: str, limit: int = 50, offset: str | None = None
     ) -> list[DailyLog]:
+        """Retrieve paginated daily logs for a specific user.
+
+        Args:
+            user_id: The Firebase UID of the user.
+            limit: Maximum number of results to return.
+            offset: Optional cursor document ID for pagination.
+
+        Returns:
+            A list of DailyLog entries sorted by date descending.
+        """
         logs: list[DailyLog] = []
         # Uses index mapping: userId -> date (descending) -> createdAt (descending)
         query = (
@@ -127,9 +180,22 @@ class ActionRepository(BaseRepository):
         return logs
 
     async def delete_log(self, log_id: str) -> None:
+        """Delete a daily log entry by its composite ID.
+
+        Args:
+            log_id: The unique log identifier to delete.
+        """
         await self.logs_ref.document(log_id).delete()
 
     async def get_log(self, log_id: str) -> DailyLog | None:
+        """Retrieve a single log entry by its composite ID.
+
+        Args:
+            log_id: The unique log identifier.
+
+        Returns:
+            The DailyLog instance or None if not found.
+        """
         doc = await self.logs_ref.document(log_id).get()
         if doc.exists:
             data = doc.to_dict()

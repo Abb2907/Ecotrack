@@ -1,9 +1,12 @@
+"""Daily log request and response schemas."""
+
 from datetime import datetime
 
 from pydantic import BaseModel, Field
 
 
 class LogCreate(BaseModel):
+    """Request schema for creating a daily activity log entry."""
     actionId: str
     quantity: float = Field(..., gt=0, description="Must be greater than 0")
     date: str = Field(
@@ -12,6 +15,7 @@ class LogCreate(BaseModel):
 
 
 class LogResponse(BaseModel):
+    """Response schema for daily activity log entries."""
     logId: str
     userId: str
     actionId: str

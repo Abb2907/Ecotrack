@@ -4,6 +4,17 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { auth } from "../lib/firebase";
 
+/**
+ * Authentication context type defining all auth state and operations.
+ *
+ * @property user - The currently authenticated Firebase or mock user, or null.
+ * @property token - The current ID token string, or null.
+ * @property loading - Whether an auth operation is in progress.
+ * @property loginWithGoogle - Initiates Google Sign-In popup flow.
+ * @property loginAsGuest - Signs in with a mock token for local development.
+ * @property logout - Signs out the current user and clears session.
+ * @property refreshToken - Forces a token refresh and returns the new token.
+ */
 interface AuthContextType {
   user: any | null;
   token: string | null;
@@ -16,6 +27,16 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+/**
+ * Authentication context provider component.
+ *
+ * Wraps the application tree to provide Firebase authentication state,
+ * Google Sign-In, mock login for development, and token management.
+ *
+ * @param props - Component props.
+ * @param props.children - Child components that consume the auth context.
+ * @returns The context provider wrapping children.
+ */
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<any | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -128,6 +149,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 };
 
+/**
+ * Custom hook to access the authentication context.
+ *
+ * Must be used within an {@link AuthProvider}. Throws an error if used
+ * outside the provider boundary.
+ *
+ * @returns The current authentication context value.
+ * @throws Error if used outside of an AuthProvider.
+ */
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

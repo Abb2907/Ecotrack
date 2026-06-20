@@ -7,6 +7,15 @@ import Image from "next/image";
 import { useAuth } from "../../context/AuthContext";
 import { Menu, X, Leaf, LogOut, Shield, BarChart3, PlusCircle, Sparkles, Calculator } from "lucide-react";
 
+/**
+ * Main navigation bar component for the EcoTrack application.
+ *
+ * Provides responsive desktop and mobile navigation with authentication
+ * controls (Google Sign-In / Sign Out), route highlighting, and user avatar display.
+ * Sticky-positioned at the top of the viewport with a glassmorphism backdrop.
+ *
+ * @returns The rendered navigation bar element.
+ */
 export const Navbar: React.FC = () => {
   const { user, loginWithGoogle, logout } = useAuth();
   const pathname = usePathname();

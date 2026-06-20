@@ -1,3 +1,9 @@
+"""Firebase Authentication security module.
+
+Handles JWT token verification against Firebase public certificates,
+user identity extraction, and role-based access control (RBAC).
+"""
+
 import time
 
 import httpx
@@ -17,6 +23,17 @@ keys_cache_expiry: float = 0.0
 
 
 async def get_firebase_public_keys() -> dict[str, str]:
+    """Fetch and cache Firebase public signing certificates.
+
+    Downloads Google's public X.509 certificates used to verify Firebase
+    ID tokens. Results are cached for one hour to minimize network calls.
+
+    Returns:
+        A mapping of key IDs to PEM-encoded public key strings.
+
+    Raises:
+        HTTPException: If the certificate endpoint returns a non-200 status.
+    """
     global keys_cache, keys_cache_expiry
     now = time.time()
 
@@ -37,6 +54,17 @@ async def get_firebase_public_keys() -> dict[str, str]:
 
 
 async def verify_firebase_token(token: str) -> dict[str, str]:
+    """Decode and verify a Firebase ID token.
+
+    Args:
+        token: The raw JWT string from the Authorization header.
+
+    Returns:
+        The decoded JWT payload as a dictionary.
+
+    Raises:
+        HTTPException: If the token header is invalid or verification fails.
+    """
     public_keys = await get_firebase_public_keys()
 
     try:
@@ -69,6 +97,17 @@ async def verify_firebase_token(token: str) -> dict[str, str]:
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security_scheme),
 ) -> dict[str, str]:
+    """Extract the authenticated user from the request.
+
+    Supports mock tokens in development mode for local testing without
+    Firebase credentials.
+
+    Args:
+        credentials: Bearer token extracted by the HTTPBearer scheme.
+
+    Returns:
+        A dictionary containing ``uid``, ``email``, and ``name`` keys.
+    """
     token = credentials.credentials
     # In development mode, allow a bypass for local mock testing
     if settings.ENVIRONMENT == "development" and token == "mock-token-admin":
@@ -95,6 +134,15 @@ async def get_current_user(
 
 
 class RoleChecker:
+    """Dependency for enforcing role-based access control on endpoints.
+
+    Args:
+        allowed_roles: List of role strings permitted to access the endpoint.
+
+    Raises:
+        HTTPException: If the authenticated user's role is not in the allowed list.
+    """
+
     def __init__(self, allowed_roles: list[str]):
         self.allowed_roles = allowed_roles
 

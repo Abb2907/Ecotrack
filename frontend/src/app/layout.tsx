@@ -28,6 +28,16 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Root layout component for the EcoTrack application.
+ *
+ * Wraps all pages with the AuthProvider context, Navbar, Footer,
+ * and applies global fonts (Outfit + Inter) and dark theme.
+ *
+ * @param props - Layout props.
+ * @param props.children - Page content rendered within the layout.
+ * @returns The root HTML structure with navigation and content area.
+ */
 export default function RootLayout({
   children,
 }: {

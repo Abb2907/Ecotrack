@@ -1,3 +1,10 @@
+"""Firestore database client initialization.
+
+Provides a shared asynchronous Firestore client instance used by all
+repository classes. Automatically respects the ``FIRESTORE_EMULATOR_HOST``
+environment variable for local development.
+"""
+
 from google.cloud import firestore
 
 from app.core.config import settings

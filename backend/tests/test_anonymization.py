@@ -1,3 +1,5 @@
+""""Tests for the HMAC-SHA256 user ID anonymization service."""
+
 import pytest
 
 from app.services.anonymization_service import AnonymizationService

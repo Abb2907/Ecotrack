@@ -1,3 +1,9 @@
+"""Reduction actions API routes.
+
+Provides CRUD endpoints for the eco-action catalog, daily activity logging,
+and paginated log retrieval with ownership-based access control.
+"""
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from app.core.security import get_current_user
@@ -17,6 +23,16 @@ async def get_action_catalog(
     action_repo: ActionRepository = Depends(ActionRepository),
     current_user: dict = Depends(get_current_user),
 ) -> list[ActionResponse]:
+    """Retrieve the full eco-action catalog, optionally filtered by category.
+
+    Args:
+        category: Optional category filter (transport, energy, or diet).
+        action_repo: Injected action repository instance.
+        current_user: Authenticated user claims.
+
+    Returns:
+        A list of available eco-friendly actions.
+    """
     # Seed default actions if catalog is empty
     await action_repo.seed_default_actions()
 
@@ -30,6 +46,22 @@ async def log_daily_action(
     current_user_claims: dict[str, str] = Depends(get_current_user),
     action_repo: ActionRepository = Depends(ActionRepository),
 ) -> LogResponse:
+    """Log a daily eco-friendly action for the authenticated user.
+
+    Computes CO2 reduction based on the action's base factor and quantity,
+    then persists the log entry to Firestore.
+
+    Args:
+        payload: The log creation payload with actionId, date, and quantity.
+        current_user_claims: Authenticated user identity.
+        action_repo: Injected action repository instance.
+
+    Returns:
+        The created log entry.
+
+    Raises:
+        HTTPException: If the specified action ID is not found in the catalog.
+    """
     uid = current_user_claims["uid"]
 
     # 1. Fetch action to retrieve conversion factors
@@ -68,6 +100,17 @@ async def get_logged_actions(
     current_user_claims: dict[str, str] = Depends(get_current_user),
     action_repo: ActionRepository = Depends(ActionRepository),
 ) -> list[LogResponse]:
+    """Retrieve paginated activity logs for the authenticated user.
+
+    Args:
+        limit: Maximum number of log entries to return (1-100).
+        offset: Optional cursor document ID for pagination.
+        current_user_claims: Authenticated user identity.
+        action_repo: Injected action repository instance.
+
+    Returns:
+        A list of daily log entries sorted by date descending.
+    """
     uid = current_user_claims["uid"]
     logs = await action_repo.get_user_logs(uid, limit=limit, offset=offset)
     return [LogResponse(**log.model_dump()) for log in logs]
@@ -79,6 +122,18 @@ async def delete_logged_action(
     current_user_claims: dict[str, str] = Depends(get_current_user),
     action_repo: ActionRepository = Depends(ActionRepository),
 ) -> None:
+    """Delete a specific logged action.
+
+    Enforces ownership verification to prevent cross-user deletion.
+
+    Args:
+        logId: The composite log ID to delete.
+        current_user_claims: Authenticated user identity.
+        action_repo: Injected action repository instance.
+
+    Raises:
+        HTTPException: If the log is not found or belongs to another user.
+    """
     uid = current_user_claims["uid"]
     log = await action_repo.get_log(logId)
     if not log:

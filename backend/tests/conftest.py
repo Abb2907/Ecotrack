@@ -1,3 +1,9 @@
+"""Shared test fixtures and configuration for the EcoTrack test suite.
+
+Sets up environment variables for testing, provides authentication
+mocking, and configures the FastAPI TestClient.
+"""
+
 import os
 from collections.abc import Generator
 
@@ -17,6 +23,7 @@ from app.main import app
 
 # Simple dependency bypass for authentication token validation during unit tests
 async def mock_get_current_user() -> dict[str, str]:
+    """Return a mock authenticated user for bypassing JWT validation in tests."""
     return {
         "uid": "test-user-123",
         "email": "testuser@example.com",
@@ -27,6 +34,11 @@ async def mock_get_current_user() -> dict[str, str]:
 
 @pytest.fixture
 def client() -> Generator[TestClient, None, None]:
+    """Provide a configured TestClient with mocked authentication.
+
+    Yields:
+        A FastAPI TestClient instance with auth bypassed.
+    """
     # Override authentication dependency
     app.dependency_overrides[get_current_user] = mock_get_current_user
     with TestClient(app) as test_client:

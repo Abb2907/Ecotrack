@@ -1,3 +1,9 @@
+"""EcoTrack FastAPI application entry point.
+
+Configures middleware, registers API routers, and defines the application
+lifespan for startup/shutdown tasks such as database seeding.
+"""
+
 import os
 from contextlib import asynccontextmanager
 
@@ -15,6 +21,17 @@ from app.repositories.action_repository import ActionRepository
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """Manage application lifespan events.
+
+    Seeds the Firestore database with default action catalog entries
+    on startup. Skips seeding in development/testing to avoid offline hangs.
+
+    Args:
+        app: The FastAPI application instance.
+
+    Yields:
+        None
+    """
     # Seeding database with default catalog actions.
     # Skip seeding in development/testing mode to prevent hangs during offline test suites.
     if settings.ENVIRONMENT != "development":
@@ -75,4 +92,9 @@ app.include_router(privacy_router, prefix="/api/v1")
 
 @app.get("/health", tags=["Health Check"])
 async def health_check() -> dict[str, str]:
+    """Return application health status and environment identifier.
+
+    Returns:
+        A dictionary with ``status`` and ``environment`` keys.
+    """
     return {"status": "healthy", "environment": settings.ENVIRONMENT}

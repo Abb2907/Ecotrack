@@ -1,3 +1,5 @@
+"""Tests for the carbon emissions calculator API and mock emission client."""
+
 import pytest
 from fastapi.testclient import TestClient
 

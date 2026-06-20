@@ -1,3 +1,10 @@
+"""Emission factor calculation clients.
+
+Provides an abstract base class and concrete implementations for computing
+CO2 emissions across transport, energy, and diet categories. Includes a
+mock client using EPA/GHG Protocol averages and a production Climatiq API client.
+"""
+
 from abc import ABC, abstractmethod
 
 import httpx
@@ -6,6 +13,7 @@ from app.core.config import settings
 
 
 class BaseEmissionClient(ABC):
+    """Abstract base class for emission factor calculation clients."""
     @abstractmethod
     async def calculate_transport_emissions(
         self, distance_km: float, mode: str
@@ -145,6 +153,14 @@ class ClimatiqEmissionClient(BaseEmissionClient):
 
 
 def get_emission_client() -> BaseEmissionClient:
+    """Factory function to select the appropriate emission client.
+
+    Uses ``MockEmissionClient`` in development and ``ClimatiqEmissionClient``
+    in production when a valid API key is configured.
+
+    Returns:
+        An instance of a BaseEmissionClient implementation.
+    """
     # Factory function defaulting to Mock Client during local testing and development phases
     climatiq_key = settings.PROJECT_ID  # Or loaded from Secret Manager/ENV
     # Using environment checks to select active client
