@@ -123,7 +123,7 @@ steps:
       - "--set-env-vars=ENVIRONMENT=production,PROJECT_ID=$_PROJECT_ID,VERTEX_AI_LOCATION=$_REGION"
       - "--min-instances=1"
       - "--max-instances=10"
-      - "--memory=512Mi"
+      - "--memory=1Gi"
       - "--cpu=1"
       - "--concurrency=80"
       - "--timeout=30"
