@@ -6,6 +6,7 @@ lifespan for startup/shutdown tasks such as database seeding.
 
 import os
 from contextlib import asynccontextmanager
+from typing import AsyncGenerator
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,7 +21,7 @@ from app.repositories.action_repository import ActionRepository
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Manage application lifespan events.
 
     Seeds the Firestore database with default action catalog entries

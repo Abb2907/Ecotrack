@@ -4,6 +4,8 @@ Provides CRUD endpoints for the eco-action catalog, daily activity logging,
 and paginated log retrieval with ownership-based access control.
 """
 
+from typing import Any
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from app.core.security import get_current_user
@@ -21,7 +23,7 @@ async def get_action_catalog(
         None, description="Filter catalog by category: transport | energy | diet"
     ),
     action_repo: ActionRepository = Depends(ActionRepository),
-    current_user: dict = Depends(get_current_user),
+    current_user: dict[str, Any] = Depends(get_current_user),
 ) -> list[ActionResponse]:
     """Retrieve the full eco-action catalog, optionally filtered by category.
 
@@ -43,7 +45,7 @@ async def get_action_catalog(
 @router.post("/log", response_model=LogResponse, status_code=status.HTTP_201_CREATED)
 async def log_daily_action(
     payload: LogCreate,
-    current_user_claims: dict[str, str] = Depends(get_current_user),
+    current_user_claims: dict[str, Any] = Depends(get_current_user),
     action_repo: ActionRepository = Depends(ActionRepository),
 ) -> LogResponse:
     """Log a daily eco-friendly action for the authenticated user.
@@ -97,7 +99,7 @@ async def log_daily_action(
 async def get_logged_actions(
     limit: int = Query(50, ge=1, le=100, description="Max logs to return"),
     offset: str | None = Query(None, description="Cursor document ID for pagination"),
-    current_user_claims: dict[str, str] = Depends(get_current_user),
+    current_user_claims: dict[str, Any] = Depends(get_current_user),
     action_repo: ActionRepository = Depends(ActionRepository),
 ) -> list[LogResponse]:
     """Retrieve paginated activity logs for the authenticated user.
@@ -119,7 +121,7 @@ async def get_logged_actions(
 @router.delete("/logs/{logId}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_logged_action(
     logId: str,
-    current_user_claims: dict[str, str] = Depends(get_current_user),
+    current_user_claims: dict[str, Any] = Depends(get_current_user),
     action_repo: ActionRepository = Depends(ActionRepository),
 ) -> None:
     """Delete a specific logged action.

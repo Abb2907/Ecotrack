@@ -25,7 +25,7 @@ def get_vertex_client() -> VertexAIClient:
 
 @router.get("/latest", response_model=dict[str, Any])
 async def get_latest_insights(
-    current_user_claims: dict[str, str] = Depends(get_current_user),
+    current_user_claims: dict[str, Any] = Depends(get_current_user),
     user_repo: UserRepository = Depends(UserRepository),
 ) -> dict[str, Any]:
     """Retrieve the most recent weekly AI-generated insights for the user.
@@ -56,12 +56,18 @@ async def get_latest_insights(
             detail="No weekly recommendations available yet. Trigger generation to create them.",
         )
 
-    return docs[0].to_dict()
+    data = docs[0].to_dict()
+    if data is None:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Insight document is empty",
+        )
+    return data
 
 
 @router.post("/generate", response_model=dict[str, Any])
 async def generate_insights(
-    current_user_claims: dict[str, str] = Depends(get_current_user),
+    current_user_claims: dict[str, Any] = Depends(get_current_user),
     user_repo: UserRepository = Depends(UserRepository),
     action_repo: ActionRepository = Depends(ActionRepository),
     vertex_client: VertexAIClient = Depends(get_vertex_client),

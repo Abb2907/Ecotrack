@@ -4,6 +4,8 @@ Provides endpoints for calculating CO2 emissions across transport,
 home energy, and dietary categories using pluggable emission factor clients.
 """
 
+from typing import Any
+
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 
@@ -45,7 +47,7 @@ class CalcResponse(BaseModel):
 @router.post("/transport", response_model=CalcResponse)
 async def calculate_transport(
     payload: TransportCalcRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: dict[str, Any] = Depends(get_current_user),
     emission_client: BaseEmissionClient = Depends(get_emission_client),
 ) -> CalcResponse:
     """Calculate CO2 emissions for a transport journey.
@@ -67,7 +69,7 @@ async def calculate_transport(
 @router.post("/energy", response_model=CalcResponse)
 async def calculate_energy(
     payload: EnergyCalcRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: dict[str, Any] = Depends(get_current_user),
     emission_client: BaseEmissionClient = Depends(get_emission_client),
 ) -> CalcResponse:
     """Calculate CO2 emissions for home energy usage.
@@ -87,7 +89,7 @@ async def calculate_energy(
 @router.post("/diet", response_model=CalcResponse)
 async def calculate_diet(
     payload: DietCalcRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: dict[str, Any] = Depends(get_current_user),
     emission_client: BaseEmissionClient = Depends(get_emission_client),
 ) -> CalcResponse:
     """Calculate CO2 emissions for dietary consumption.

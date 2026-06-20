@@ -42,15 +42,20 @@ const DIET_OPTIONS = [
 ];
 
 export default function OnboardPage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [data, setData] = useState<StepData>({ transport: 0, energy: 0, diet: 0 });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!user) {
-    router.push("/");
+  React.useEffect(() => {
+    if (!loading && !user) {
+      router.push("/");
+    }
+  }, [user, loading, router]);
+
+  if (loading || !user) {
     return null;
   }
 

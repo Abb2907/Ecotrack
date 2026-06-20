@@ -109,12 +109,16 @@ class UserRepository(BaseRepository):
         logs: list[dict[str, Any]] = []
         logs_query = self.logs_ref.where("userId", "==", user_id).stream()
         async for log_doc in logs_query:
-            logs.append(log_doc.to_dict())
+            log_data = log_doc.to_dict()
+            if log_data is not None:
+                logs.append(log_data)
 
         insights: list[dict[str, Any]] = []
         insights_query = self.insights_ref.where("userId", "==", user_id).stream()
         async for insight_doc in insights_query:
-            insights.append(insight_doc.to_dict())
+            insight_data = insight_doc.to_dict()
+            if insight_data is not None:
+                insights.append(insight_data)
 
         return {"profile": user.model_dump(), "logs": logs, "insights": insights}
 

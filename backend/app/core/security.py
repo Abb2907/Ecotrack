@@ -53,7 +53,10 @@ async def get_firebase_public_keys() -> dict[str, str]:
     return keys_cache
 
 
-async def verify_firebase_token(token: str) -> dict[str, str]:
+from typing import Any
+
+
+async def verify_firebase_token(token: str) -> dict[str, Any]:
     """Decode and verify a Firebase ID token.
 
     Args:
@@ -86,7 +89,7 @@ async def verify_firebase_token(token: str) -> dict[str, str]:
             audience=settings.PROJECT_ID,
             issuer=f"https://securetoken.google.com/{settings.PROJECT_ID}",
         )
-        return payload
+        return dict(payload)
     except JWTError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -96,7 +99,7 @@ async def verify_firebase_token(token: str) -> dict[str, str]:
 
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security_scheme),
-) -> dict[str, str]:
+) -> dict[str, Any]:
     """Extract the authenticated user from the request.
 
     Supports mock tokens in development mode for local testing without

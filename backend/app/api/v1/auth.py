@@ -4,6 +4,8 @@ Handles user registration, profile retrieval, and carbon baseline
 configuration via Firebase-authenticated endpoints.
 """
 
+from typing import Any
+
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.core.security import get_current_user
@@ -19,7 +21,7 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 )
 async def register_user(
     payload: UserCreate,
-    current_user_claims: dict[str, str] = Depends(get_current_user),
+    current_user_claims: dict[str, Any] = Depends(get_current_user),
     user_repo: UserRepository = Depends(UserRepository),
 ) -> UserResponse:
     """Register a new user or update an existing user's profile.
@@ -40,14 +42,16 @@ async def register_user(
     existing_user = await user_repo.get_user(uid)
     if existing_user:
         # Update user display name or email if they have changed
-        updates = {}
+        updates: dict[str, Any] = {}
         if existing_user.displayName != payload.displayName:
             updates["displayName"] = payload.displayName
         if existing_user.email != payload.email:
             updates["email"] = payload.email
         if updates:
             await user_repo.update_user(uid, updates)
-            existing_user = await user_repo.get_user(uid)
+            updated_user = await user_repo.get_user(uid)
+            if updated_user:
+                return UserResponse(**updated_user.model_dump())
         return UserResponse(**existing_user.model_dump())
 
     # Create new user record
@@ -67,7 +71,7 @@ async def register_user(
 
 @router.get("/me", response_model=UserResponse)
 async def get_my_profile(
-    current_user_claims: dict[str, str] = Depends(get_current_user),
+    current_user_claims: dict[str, Any] = Depends(get_current_user),
     user_repo: UserRepository = Depends(UserRepository),
 ) -> UserResponse:
     """Retrieve the authenticated user's profile.
@@ -95,7 +99,7 @@ async def get_my_profile(
 @router.put("/baseline", response_model=UserResponse)
 async def update_my_baseline(
     payload: BaselineUpdate,
-    current_user_claims: dict[str, str] = Depends(get_current_user),
+    current_user_claims: dict[str, Any] = Depends(get_current_user),
     user_repo: UserRepository = Depends(UserRepository),
 ) -> UserResponse:
     """Update the user's carbon emission baseline values.

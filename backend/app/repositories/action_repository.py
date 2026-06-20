@@ -4,6 +4,8 @@ Manages CRUD operations for the eco-action catalog and user daily
 reduction logs stored in Firestore.
 """
 
+from typing import Any
+
 from app.models.domain.action import Action
 from app.models.domain.log import DailyLog
 from app.repositories.base import BaseRepository
@@ -23,7 +25,7 @@ class ActionRepository(BaseRepository):
             A list of Action domain model instances.
         """
         actions: list[Action] = []
-        query = self.actions_ref
+        query: Any = self.actions_ref
         if category:
             query = query.where("category", "==", category)
 

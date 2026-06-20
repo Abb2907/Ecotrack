@@ -48,7 +48,7 @@ const CATEGORY_CONFIG = {
 };
 
 export default function CalculatorPage() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState<Category>("transport");
@@ -68,8 +68,13 @@ export default function CalculatorPage() {
   const [meals, setMeals] = useState(3);
   const [dietType, setDietType] = useState("meat_heavy");
 
-  if (!user) {
-    router.push("/");
+  React.useEffect(() => {
+    if (!authLoading && !user) {
+      router.push("/");
+    }
+  }, [user, authLoading, router]);
+
+  if (authLoading || !user) {
     return null;
   }
 
