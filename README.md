@@ -1,7 +1,7 @@
 # EcoTrack
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/Abb2907/Ecotrack/ci.yml?branch=main)](https://github.com/Abb2907/Ecotrack/actions)
-[![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen.svg)]()
+[![Coverage](https://codecov.io/gh/Abb2907/Ecotrack/branch/main/graph/badge.svg)](https://codecov.io/gh/Abb2907/Ecotrack)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Lint: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
@@ -91,6 +91,7 @@ EcoTrack maintains high code quality and test coverage through robust tooling:
 
 - **Frontend Testing**: Uses Jest and React Testing Library (RTL). Execute tests locally via `npm run test` in the `frontend/` directory.
 - **Backend Testing**: Uses Pytest with XML coverage reporting (`pytest --cov-report=xml`).
+- **Coverage**: Handled dynamically by [Codecov](https://codecov.io). The CI pipeline uploads test coverage reports on every push, ensuring the coverage badge at the top of this README stays perfectly in sync with the repository.
 - **Linting & Formatting**: 
   - **Frontend**: Enforced using ESLint (with `next/core-web-vitals` and `jsx-a11y` accessibility plugins) and Prettier.
   - **Backend**: Managed via Ruff (configured in `pyproject.toml` for strict modern standards) and MyPy.

@@ -16,7 +16,8 @@ We use GitHub to host code, to track issues and feature requests, as well as acc
 3. If you've changed APIs, update the documentation.
 4. Ensure the test suite passes (run `npm test` for frontend and `pytest` for backend).
 5. Ensure your code is properly formatted (`black` for Python, `prettier` for TypeScript).
-6. Issue that pull request!
+6. Our `.github/CODEOWNERS` file will automatically request reviews from maintainers once the PR is opened.
+7. Issue that pull request!
 
 ## Any contributions you make will be under the MIT Software License
 In short, when you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the maintainers if that's a concern.

@@ -37,11 +37,17 @@ jobs:
         run: mypy . --strict --ignore-missing-imports
 
       - name: Run Tests & Coverage
-        run: pytest -q --cov=app --cov-fail-under=90
+        run: pytest -q --cov=app --cov-fail-under=90 --cov-report=xml
         env:
           PROJECT_ID: test-project
           REGION: us-central1
           ANONYMIZATION_KEY_SECRET_NAME: test-secret
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./backend/coverage.xml
+          flags: backend
 
   frontend-checks:
     runs-on: ubuntu-latest
@@ -72,3 +78,59 @@ jobs:
 
       - name: Run Tests & Coverage
         run: npx jest --coverage --passWithNoTests
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          directory: ./frontend/coverage
+          flags: frontend
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install pip-audit
+        run: pip install pip-audit
+
+      - name: Run pip-audit
+        run: pip-audit -r backend/requirements.txt || echo "Pip audit failed, review dependencies"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Run npm audit
+        run: npm audit --prefix frontend || echo "NPM audit failed, review dependencies"
+
+      - name: Detect Secrets
+        uses: Yelp/detect-secrets@v1.4.0
+        with:
+          args: --baseline .secrets.baseline
+
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./frontend
+      - name: Build frontend
+        run: npm run build
+        working-directory: ./frontend
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          configPath: './frontend/lighthouserc.json'
+          uploadArtifacts: true
+          temporaryPublicStorage: true
