@@ -2,12 +2,46 @@
 
 EcoTrack is a production-grade web application to help individuals understand, track, and reduce their carbon footprint.
 
+🚀 **Live App:** [https://ecotrack-frontend-42cnhcimzq-uc.a.run.app](https://ecotrack-frontend-42cnhcimzq-uc.a.run.app)
+
 ## Tech Stack
 - **Frontend**: Next.js (React) + TypeScript + Tailwind CSS
-- **Backend**: FastAPI (Python) + Firestore (GCP Native Mode) + BigQuery (Aggregated Anonymized Telemetry)
-- **AI**: Vertex AI (Gemini) for weekly personalized recommendation generation
+- **Backend**: FastAPI (Python)
+- **Database**: Firestore (GCP Native Mode)
+- **Data Analytics**: BigQuery (Aggregated Anonymized Telemetry)
+- **AI**: Vertex AI (Gemini 2.0 Flash) for weekly personalized sustainability recommendation generation
 - **Auth**: Firebase Authentication (Google Sign-In, Email/Password)
-- **Security & Privacy**: Strict 7-day deletion grace period, self-serve data export/deletion, and HMAC-SHA256 user ID hashing prior to BigQuery streaming.
+- **CI/CD**: Cloud Build (Automated Dockerization & Deployment)
+- **Hosting**: Google Cloud Run (Fully managed serverless container runtime)
+
+## Project Architecture
+The project follows a modern microservices architecture, heavily utilizing Google Cloud Platform (GCP):
+
+```mermaid
+graph TD
+    User([End User]) -->|HTTPS| Frontend(Next.js App UI)
+    Frontend -->|Firebase Auth| FirebaseAuth[(Firebase Auth)]
+    Frontend -->|REST API| Backend(FastAPI Service)
+    Backend -->|Read/Write User Logs| Firestore[(Firestore DB)]
+    Backend -->|Stream Anonymized Telemetry| BigQuery[(BigQuery)]
+    Backend -->|Generate AI Insights| VertexAI([Vertex AI - Gemini])
+    
+    subgraph Google Cloud Run
+    Frontend
+    Backend
+    end
+```
+
+## Core Workflow & Features
+1. **Authentication**: Users sign in securely using Firebase Authentication.
+2. **Dashboard Overview**: Displays total logged actions, aggregated impact (High/Medium/Low), and recent history pulled securely from Firestore.
+3. **Action Logging**: Users browse a catalog of eco-friendly actions (e.g., Recycling, Energy Savings, Transport) and log them. These logs are stored directly against the user's secure profile.
+4. **AI-Powered Insights**: 
+   - A dedicated Python backend running on FastAPI retrieves the user's 7-day activity log from Firestore.
+   - It submits a structured prompt to **Vertex AI (Gemini 2.0 Flash)**.
+   - The AI generates contextual, non-repetitive sustainability recommendations (categorized by difficulty and impact).
+   - Insights are saved to Firestore and returned to the Next.js frontend.
+5. **Interactive AI Log Routing**: Clicking "Log this action" from an AI insight automatically routes the user to the log catalog and uses a fuzzy-search algorithm to pre-select the exact recommended action for immediate logging.
 
 ## Getting Started
 
@@ -35,4 +69,9 @@ EcoTrack is a production-grade web application to help individuals understand, t
    ```
 
 ## Production Deployment
+The application uses **Cloud Build** triggered natively from the repository or via manual submission to deploy Docker containers directly to **Google Cloud Run**.
+
+```bash
+gcloud builds submit --config cloudbuild.yaml
+```
 Refer to `infrastructure/gcp_provision.sh` for initial Google Cloud Platform resources provisioning.
