@@ -24,7 +24,7 @@ class VertexAIClient:
         self.project_id = settings.PROJECT_ID
         self.location = settings.VERTEX_AI_LOCATION
         self.initialized = False
-        
+
     def _initialize_vertex(self) -> None:
         if not self.initialized:
             try:
@@ -47,24 +47,22 @@ class VertexAIClient:
             return self._generate_mock_recommendations(user_baseline, recent_logs)
 
         self._initialize_vertex()
-        
+
         try:
             # Setup Vertex AI Gemini Model
             model = GenerativeModel("gemini-1.5-pro-preview-0409")
-            
+
             # Formulate the prompt
-            prompt = f"""
-            Analyze this user's current carbon baseline and recent weekly actions to generate 2 to 3 tailored recommendations.
-            
-            User Carbon Baseline (kg CO2/month):
-            {json.dumps(user_baseline)}
-            
-            User's Logged Carbon Reduction Actions this Week:
-            {json.dumps(recent_logs)}
-            
-            Return recommendations that target their highest emission categories. Ensure they are safe, actionable, and specific.
-            """
-            
+            prompt = f"""Analyze this user's current carbon baseline and recent weekly actions to generate 2 to 3 tailored recommendations.
+
+User Carbon Baseline (kg CO2/month):
+{json.dumps(user_baseline)}
+
+User's Logged Carbon Reduction Actions this Week:
+{json.dumps(recent_logs)}
+
+Return recommendations that target their highest emission categories. Ensure they are safe, actionable, and specific."""
+
             # Enforce structured output via Pydantic model response schema
             response_schema = {
                 "type": "OBJECT",
@@ -96,10 +94,10 @@ class VertexAIClient:
                     temperature=0.2
                 )
             )
-            
+
             data = json.loads(response.text)
             return WeeklyRecommendations(**data)
-            
+
         except Exception as e:
             # Fail-safe grace fallback to mock generator
             if settings.ENVIRONMENT == "production":
