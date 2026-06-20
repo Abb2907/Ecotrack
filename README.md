@@ -1,5 +1,7 @@
 # EcoTrack
 
+![EcoTrack Screenshot](./docs/screenshot.png)
+
 EcoTrack is a production-grade web application to help individuals understand, track, and reduce their carbon footprint.
 
 🚀 **Live App:** [https://ecotrack-frontend-361013050235.us-central1.run.app/](https://ecotrack-frontend-361013050235.us-central1.run.app/)
