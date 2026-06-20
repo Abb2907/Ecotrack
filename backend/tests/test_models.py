@@ -11,9 +11,9 @@ from pydantic import ValidationError
 
 from app.models.domain.action import Action
 from app.models.domain.log import DailyLog
-from app.models.domain.user import CarbonBaseline, ConsentInfo, User, UserPreferences
+from app.models.domain.user import CarbonBaseline
 from app.models.schemas.log_schema import LogCreate
-from app.models.schemas.user_schema import BaselineUpdate, UserCreate
+from app.models.schemas.user_schema import BaselineUpdate
 
 
 class TestActionModel:

@@ -15,6 +15,7 @@ router = APIRouter(prefix="/calculator", tags=["Emissions Calculator"])
 
 class TransportCalcRequest(BaseModel):
     """Request schema for transport emission calculations."""
+
     distance_km: float = Field(..., gt=0, description="Distance traveled in kilometers")
     mode: str = Field(
         ..., description="gasoline_car | diesel_car | electric_car | bus | train"
@@ -23,18 +24,21 @@ class TransportCalcRequest(BaseModel):
 
 class EnergyCalcRequest(BaseModel):
     """Request schema for home energy emission calculations."""
+
     kwh: float = Field(..., gt=0, description="Energy usage in kilowatt-hours (kWh)")
     source: str = Field(..., description="grid_electricity | natural_gas | heating_oil")
 
 
 class DietCalcRequest(BaseModel):
     """Request schema for dietary emission calculations."""
+
     meals: int = Field(..., gt=0, description="Number of meals eaten")
     diet_type: str = Field(..., description="meat_heavy | vegetarian | vegan")
 
 
 class CalcResponse(BaseModel):
     """Standard response containing the calculated CO2 in kilograms."""
+
     co2_kg: float
 
 

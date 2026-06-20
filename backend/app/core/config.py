@@ -19,6 +19,7 @@ class Settings(BaseSettings):
         ANONYMIZATION_KEY_SECRET_NAME: Secret Manager key name for HMAC anonymization.
         DELETION_GRACE_PERIOD_DAYS: Days to wait before purging deleted accounts.
     """
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

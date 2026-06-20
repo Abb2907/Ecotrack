@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 
 class DailyLog(BaseModel):
     """Represents a single daily eco-action log entry for a user."""
+
     logId: str = Field(..., description="Composite log ID (userId_date_actionId)")
     userId: str
     actionId: str

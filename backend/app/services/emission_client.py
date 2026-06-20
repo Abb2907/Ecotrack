@@ -14,6 +14,7 @@ from app.core.config import settings
 
 class BaseEmissionClient(ABC):
     """Abstract base class for emission factor calculation clients."""
+
     @abstractmethod
     async def calculate_transport_emissions(
         self, distance_km: float, mode: str

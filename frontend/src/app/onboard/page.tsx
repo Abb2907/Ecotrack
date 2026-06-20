@@ -83,7 +83,8 @@ export default function OnboardPage() {
         </div>
         <h1 className="text-3xl font-extrabold text-brand-text">Set Your Carbon Baseline</h1>
         <p className="text-brand-muted text-sm">
-          Choose the option that best describes your daily lifestyle. You can always update this later.
+          Choose the option that best describes your daily lifestyle. You can always update this
+          later.
         </p>
       </div>
 
@@ -96,7 +97,9 @@ export default function OnboardPage() {
                 i <= step ? "bg-brand-primary" : "bg-slate-700"
               }`}
             />
-            <p className={`text-xs mt-1.5 font-semibold text-center ${i <= step ? "text-brand-primary" : "text-brand-muted"}`}>
+            <p
+              className={`text-xs mt-1.5 font-semibold text-center ${i <= step ? "text-brand-primary" : "text-brand-muted"}`}
+            >
               {s}
             </p>
           </div>
@@ -112,7 +115,9 @@ export default function OnboardPage() {
             </div>
             <div>
               <h2 className="font-bold text-brand-text">Daily Transportation</h2>
-              <p className="text-xs text-brand-muted">How do you typically commute or travel each day?</p>
+              <p className="text-xs text-brand-muted">
+                How do you typically commute or travel each day?
+              </p>
             </div>
           </div>
           <div className="space-y-3">
@@ -145,7 +150,9 @@ export default function OnboardPage() {
             </div>
             <div>
               <h2 className="font-bold text-brand-text">Home Energy Usage</h2>
-              <p className="text-xs text-brand-muted">What best describes your home&apos;s energy consumption?</p>
+              <p className="text-xs text-brand-muted">
+                What best describes your home&apos;s energy consumption?
+              </p>
             </div>
           </div>
           <div className="space-y-3">
@@ -178,7 +185,9 @@ export default function OnboardPage() {
             </div>
             <div>
               <h2 className="font-bold text-brand-text">Dietary Habits</h2>
-              <p className="text-xs text-brand-muted">Which eating pattern best matches your regular diet?</p>
+              <p className="text-xs text-brand-muted">
+                Which eating pattern best matches your regular diet?
+              </p>
             </div>
           </div>
           <div className="space-y-3">
@@ -208,22 +217,34 @@ export default function OnboardPage() {
           <h2 className="text-xl font-bold text-brand-text mb-6">Review Your Baseline</h2>
           <div className="space-y-4">
             {[
-              { label: "Transport", icon: Car, value: data.transport, color: "text-brand-secondary" },
+              {
+                label: "Transport",
+                icon: Car,
+                value: data.transport,
+                color: "text-brand-secondary",
+              },
               { label: "Home Energy", icon: Zap, value: data.energy, color: "text-brand-accent" },
               { label: "Diet", icon: Utensils, value: data.diet, color: "text-brand-primary" },
             ].map(({ label, icon: Icon, value, color }) => (
-              <div key={label} className="flex items-center justify-between p-4 rounded-xl bg-slate-800/40 border border-brand-border/50">
+              <div
+                key={label}
+                className="flex items-center justify-between p-4 rounded-xl bg-slate-800/40 border border-brand-border/50"
+              >
                 <div className="flex items-center gap-3">
                   <Icon className={`h-5 w-5 ${color}`} />
                   <span className="font-semibold text-brand-text">{label}</span>
                 </div>
-                <span className={`text-lg font-bold ${color}`}>{value.toFixed(1)} <span className="text-xs text-brand-muted font-normal">kg CO₂e/day</span></span>
+                <span className={`text-lg font-bold ${color}`}>
+                  {value.toFixed(1)}{" "}
+                  <span className="text-xs text-brand-muted font-normal">kg CO₂e/day</span>
+                </span>
               </div>
             ))}
             <div className="flex items-center justify-between p-4 rounded-xl bg-brand-primary/10 border border-brand-primary/30 mt-2">
               <span className="font-bold text-brand-text">Total Daily Baseline</span>
               <span className="text-xl font-extrabold text-brand-primary">
-                {(data.transport + data.energy + data.diet).toFixed(1)} <span className="text-xs font-normal text-brand-muted">kg CO₂e/day</span>
+                {(data.transport + data.energy + data.diet).toFixed(1)}{" "}
+                <span className="text-xs font-normal text-brand-muted">kg CO₂e/day</span>
               </span>
             </div>
           </div>
@@ -250,11 +271,7 @@ export default function OnboardPage() {
             Next: {STEPS[step + 1]}
           </Button>
         ) : (
-          <Button
-            onClick={handleSave}
-            loading={saving}
-            icon={<CheckCircle2 className="h-4 w-4" />}
-          >
+          <Button onClick={handleSave} loading={saving} icon={<CheckCircle2 className="h-4 w-4" />}>
             Save & Go to Dashboard
           </Button>
         )}

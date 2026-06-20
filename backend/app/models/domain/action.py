@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 
 class Action(BaseModel):
     """Represents a single eco-friendly action in the reduction catalog."""
+
     actionId: str = Field(
         ..., description="Unique Action Catalog ID (e.g. bike_commute)"
     )

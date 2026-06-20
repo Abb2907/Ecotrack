@@ -22,9 +22,15 @@ export const Footer: React.FC = () => {
           </div>
           <div className="flex items-center gap-6 text-xs text-brand-muted">
             <span>© {new Date().getFullYear()} EcoTrack Inc.</span>
-            <span className="hover:text-brand-primary cursor-pointer transition-colors">Privacy Policy</span>
-            <span className="hover:text-brand-primary cursor-pointer transition-colors">GDPR Portability</span>
-            <span className="hover:text-brand-primary cursor-pointer transition-colors">Terms of Use</span>
+            <span className="hover:text-brand-primary cursor-pointer transition-colors">
+              Privacy Policy
+            </span>
+            <span className="hover:text-brand-primary cursor-pointer transition-colors">
+              GDPR Portability
+            </span>
+            <span className="hover:text-brand-primary cursor-pointer transition-colors">
+              Terms of Use
+            </span>
           </div>
         </div>
       </div>

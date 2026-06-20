@@ -7,6 +7,7 @@ from pydantic import BaseModel, EmailStr, Field
 
 class CarbonBaseline(BaseModel):
     """Carbon emission baseline values across transport, energy, and diet."""
+
     transport: float = 0.0
     energy: float = 0.0
     diet: float = 0.0
@@ -15,6 +16,7 @@ class CarbonBaseline(BaseModel):
 
 class ConsentInfo(BaseModel):
     """GDPR data processing consent record."""
+
     dataProcessingAccepted: bool
     consentTimestamp: datetime
     consentVersion: str
@@ -22,12 +24,14 @@ class ConsentInfo(BaseModel):
 
 class UserPreferences(BaseModel):
     """User interface and notification preferences."""
+
     theme: str = "dark"
     emailNotifications: bool = True
 
 
 class User(BaseModel):
     """Core user profile model stored in Firestore."""
+
     userId: str = Field(..., description="Firebase Auth UID")
     email: EmailStr
     displayName: str

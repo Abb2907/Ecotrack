@@ -6,10 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 
 import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
-import {
-  Car, Zap, Utensils, Calculator, AlertCircle, BarChart3,
-  ArrowRight
-} from "lucide-react";
+import { Car, Zap, Utensils, Calculator, AlertCircle, BarChart3, ArrowRight } from "lucide-react";
 
 type Category = "transport" | "energy" | "diet";
 
@@ -40,7 +37,12 @@ const DIET_TYPES = [
 ];
 
 const CATEGORY_CONFIG = {
-  transport: { label: "Transport", icon: Car, color: "text-brand-secondary", bg: "bg-brand-secondary/10" },
+  transport: {
+    label: "Transport",
+    icon: Car,
+    color: "text-brand-secondary",
+    bg: "bg-brand-secondary/10",
+  },
   energy: { label: "Energy", icon: Zap, color: "text-brand-accent", bg: "bg-brand-accent/10" },
   diet: { label: "Diet", icon: Utensils, color: "text-brand-primary", bg: "bg-brand-primary/10" },
 };
@@ -130,10 +132,15 @@ export default function CalculatorPage() {
           </div>
           <h1 className="text-3xl font-extrabold text-brand-text">Carbon Calculator</h1>
           <p className="text-brand-muted text-sm mt-1">
-            Estimate your emissions across transport, energy, and diet using certified GHG Protocol factors.
+            Estimate your emissions across transport, energy, and diet using certified GHG Protocol
+            factors.
           </p>
         </div>
-        <Button variant="outline" onClick={() => router.push("/onboard")} icon={<BarChart3 className="h-4 w-4" />}>
+        <Button
+          variant="outline"
+          onClick={() => router.push("/onboard")}
+          icon={<BarChart3 className="h-4 w-4" />}
+        >
           Update Baseline
         </Button>
       </div>
@@ -173,7 +180,10 @@ export default function CalculatorPage() {
             {activeTab === "transport" && (
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="distance" className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
+                  <label
+                    htmlFor="distance"
+                    className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2"
+                  >
                     Distance (km)
                   </label>
                   <input
@@ -186,7 +196,10 @@ export default function CalculatorPage() {
                   />
                 </div>
                 <div>
-                  <div id="transport-mode" className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
+                  <div
+                    id="transport-mode"
+                    className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2"
+                  >
                     Transport Mode
                   </div>
                   <div role="group" aria-labelledby="transport-mode" className="space-y-2">
@@ -215,7 +228,10 @@ export default function CalculatorPage() {
             {activeTab === "energy" && (
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="energy-usage" className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
+                  <label
+                    htmlFor="energy-usage"
+                    className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2"
+                  >
                     Energy Usage (kWh)
                   </label>
                   <input
@@ -228,7 +244,10 @@ export default function CalculatorPage() {
                   />
                 </div>
                 <div>
-                  <div id="energy-source" className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
+                  <div
+                    id="energy-source"
+                    className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2"
+                  >
                     Energy Source
                   </div>
                   <div role="group" aria-labelledby="energy-source" className="space-y-2">
@@ -257,7 +276,10 @@ export default function CalculatorPage() {
             {activeTab === "diet" && (
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="meals" className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
+                  <label
+                    htmlFor="meals"
+                    className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2"
+                  >
                     Number of Meals
                   </label>
                   <input
@@ -270,7 +292,10 @@ export default function CalculatorPage() {
                   />
                 </div>
                 <div>
-                  <div id="diet-type" className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2">
+                  <div
+                    id="diet-type"
+                    className="text-xs font-bold text-brand-muted uppercase tracking-wider block mb-2"
+                  >
                     Diet Type
                   </div>
                   <div role="group" aria-labelledby="diet-type" className="space-y-2">
@@ -295,7 +320,12 @@ export default function CalculatorPage() {
               </div>
             )}
 
-            <Button className="w-full mt-6" onClick={handleCalculate} loading={loading} icon={<Calculator className="h-4 w-4" />}>
+            <Button
+              className="w-full mt-6"
+              onClick={handleCalculate}
+              loading={loading}
+              icon={<Calculator className="h-4 w-4" />}
+            >
               Calculate Emissions
             </Button>
           </Card>
@@ -314,9 +344,12 @@ export default function CalculatorPage() {
               <>
                 {/* Total Summary */}
                 <div className="p-4 rounded-xl bg-brand-error/10 border border-brand-error/30 mb-4">
-                  <p className="text-xs font-bold text-brand-muted uppercase tracking-wider">Total Estimated Emissions</p>
+                  <p className="text-xs font-bold text-brand-muted uppercase tracking-wider">
+                    Total Estimated Emissions
+                  </p>
                   <p className="text-2xl font-extrabold text-brand-error mt-1">
-                    {totalEmissions.toFixed(2)} <span className="text-xs font-normal text-brand-muted">kg CO₂e</span>
+                    {totalEmissions.toFixed(2)}{" "}
+                    <span className="text-xs font-normal text-brand-muted">kg CO₂e</span>
                   </p>
                 </div>
 
@@ -331,15 +364,21 @@ export default function CalculatorPage() {
                         className="flex items-center justify-between p-3 rounded-xl bg-slate-800/40 border border-brand-border/50"
                       >
                         <div className="flex items-center gap-3">
-                          <div className={`h-8 w-8 rounded-lg ${cfg.bg} flex items-center justify-center shrink-0`}>
+                          <div
+                            className={`h-8 w-8 rounded-lg ${cfg.bg} flex items-center justify-center shrink-0`}
+                          >
                             <Icon className={`h-4 w-4 ${cfg.color}`} />
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-brand-text capitalize">{r.label}</p>
+                            <p className="text-sm font-semibold text-brand-text capitalize">
+                              {r.label}
+                            </p>
                             <p className="text-xs text-brand-muted">{cfg.label}</p>
                           </div>
                         </div>
-                        <span className="text-sm font-bold text-brand-error">{r.co2_kg.toFixed(4)} kg</span>
+                        <span className="text-sm font-bold text-brand-error">
+                          {r.co2_kg.toFixed(4)} kg
+                        </span>
                       </div>
                     );
                   })}
@@ -351,7 +390,11 @@ export default function CalculatorPage() {
           {/* Action CTA */}
           <Card hoverable className="text-center">
             <p className="text-sm text-brand-muted mb-3">Ready to reduce your footprint?</p>
-            <Button className="w-full" onClick={() => router.push("/log")} icon={<ArrowRight className="h-4 w-4" />}>
+            <Button
+              className="w-full"
+              onClick={() => router.push("/log")}
+              icon={<ArrowRight className="h-4 w-4" />}
+            >
               Log a Reduction Action
             </Button>
           </Card>
@@ -361,30 +404,48 @@ export default function CalculatorPage() {
       {/* Accessible Data Table Summary */}
       {results.length > 0 && (
         <Card hoverable={false}>
-          <h3 className="text-lg font-bold text-brand-text mb-3">Results Summary (Accessible Table)</h3>
+          <h3 className="text-lg font-bold text-brand-text mb-3">
+            Results Summary (Accessible Table)
+          </h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
               <caption className="sr-only">Carbon emission calculation results</caption>
               <thead className="border-b border-brand-border">
                 <tr className="text-xs text-brand-muted uppercase font-bold">
-                  <th scope="col" className="py-3 pr-4">#</th>
-                  <th scope="col" className="py-3 pr-4">Category</th>
-                  <th scope="col" className="py-3 pr-4">Description</th>
-                  <th scope="col" className="py-3 text-right">CO₂ (kg)</th>
+                  <th scope="col" className="py-3 pr-4">
+                    #
+                  </th>
+                  <th scope="col" className="py-3 pr-4">
+                    Category
+                  </th>
+                  <th scope="col" className="py-3 pr-4">
+                    Description
+                  </th>
+                  <th scope="col" className="py-3 text-right">
+                    CO₂ (kg)
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-brand-border/30">
                 {results.map((r, idx) => (
                   <tr key={idx} className="hover:bg-slate-800/10 transition-colors">
                     <td className="py-3 pr-4 text-brand-muted">{idx + 1}</td>
-                    <td className="py-3 pr-4 font-semibold text-brand-text capitalize">{r.category}</td>
+                    <td className="py-3 pr-4 font-semibold text-brand-text capitalize">
+                      {r.category}
+                    </td>
                     <td className="py-3 pr-4 text-brand-muted capitalize">{r.label}</td>
-                    <td className="py-3 text-right font-bold text-brand-error">{r.co2_kg.toFixed(4)}</td>
+                    <td className="py-3 text-right font-bold text-brand-error">
+                      {r.co2_kg.toFixed(4)}
+                    </td>
                   </tr>
                 ))}
                 <tr className="font-bold border-t border-brand-border">
-                  <td colSpan={3} className="py-3 text-brand-text">Total</td>
-                  <td className="py-3 text-right text-brand-error">{totalEmissions.toFixed(4)} kg</td>
+                  <td colSpan={3} className="py-3 text-brand-text">
+                    Total
+                  </td>
+                  <td className="py-3 text-right text-brand-error">
+                    {totalEmissions.toFixed(4)} kg
+                  </td>
                 </tr>
               </tbody>
             </table>

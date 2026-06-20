@@ -1,4 +1,4 @@
-""""Tests for the HMAC-SHA256 user ID anonymization service."""
+""" "Tests for the HMAC-SHA256 user ID anonymization service."""
 
 import pytest
 

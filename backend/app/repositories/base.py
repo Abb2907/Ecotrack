@@ -11,6 +11,7 @@ class BaseRepository:
     Initializes shared collection references for users, actions, logs,
     and weekly insights.
     """
+
     def __init__(self) -> None:
         self.db: firestore.AsyncClient = db
         self.users_ref = self.db.collection("users")

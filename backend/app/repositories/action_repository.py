@@ -11,6 +11,7 @@ from app.repositories.base import BaseRepository
 
 class ActionRepository(BaseRepository):
     """Repository for eco-action catalog and daily reduction log operations."""
+
     # Catalog operations
     async def get_actions(self, category: str | None = None) -> list[Action]:
         """Retrieve all actions from the catalog, optionally filtered by category.

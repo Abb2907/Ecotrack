@@ -5,7 +5,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "../../context/AuthContext";
-import { Menu, X, Leaf, LogOut, Shield, BarChart3, PlusCircle, Sparkles, Calculator } from "lucide-react";
+import {
+  Menu,
+  X,
+  Leaf,
+  LogOut,
+  Shield,
+  BarChart3,
+  PlusCircle,
+  Sparkles,
+  Calculator,
+} from "lucide-react";
 
 /**
  * Main navigation bar component for the EcoTrack application.
@@ -45,7 +55,10 @@ export const Navbar: React.FC = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight text-brand-primary">
+            <Link
+              href="/"
+              className="flex items-center gap-2 text-xl font-bold tracking-tight text-brand-primary"
+            >
               <Leaf className="h-6 w-6 text-brand-primary animate-pulse" />
               <span>EcoTrack</span>
             </Link>
@@ -152,7 +165,13 @@ export const Navbar: React.FC = () => {
               <div className="border-t border-slate-800 my-2 pt-2">
                 <div className="flex items-center gap-3 px-3 py-2">
                   {user.photoURL && (
-                    <Image src={user.photoURL} alt="User Avatar" width={36} height={36} className="h-9 w-9 rounded-full" />
+                    <Image
+                      src={user.photoURL}
+                      alt="User Avatar"
+                      width={36}
+                      height={36}
+                      className="h-9 w-9 rounded-full"
+                    />
                   )}
                   <div>
                     <div className="text-sm font-semibold text-brand-text">{user.displayName}</div>

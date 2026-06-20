@@ -37,6 +37,7 @@ class VertexAIClient:
     A client to interact with Google Vertex AI's Generative Models.
     Responsible for generating personalised sustainability insights based on user data.
     """
+
     def __init__(self) -> None:
         self.project_id = settings.PROJECT_ID
         self.location = settings.VERTEX_AI_LOCATION

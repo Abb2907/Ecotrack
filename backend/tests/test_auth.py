@@ -1,4 +1,4 @@
-""""Tests for user authentication and profile management API endpoints."""
+""" "Tests for user authentication and profile management API endpoints."""
 
 from collections.abc import Generator
 from datetime import datetime

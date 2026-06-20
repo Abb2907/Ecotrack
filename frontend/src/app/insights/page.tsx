@@ -8,14 +8,37 @@ import { api, WeeklyInsights, RecommendationItem } from "../../lib/api";
 import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import {
-  Sparkles, RefreshCw, TrendingUp, Zap, Leaf, ChevronRight,
-  AlertCircle, Loader2, Clock, Award
+  Sparkles,
+  RefreshCw,
+  TrendingUp,
+  Zap,
+  Leaf,
+  ChevronRight,
+  AlertCircle,
+  Loader2,
+  Clock,
+  Award,
 } from "lucide-react";
 
 const IMPACT_CONFIG = {
-  high: { label: "High Impact", color: "text-brand-primary", bg: "bg-brand-primary/10", border: "border-brand-primary/30" },
-  medium: { label: "Medium Impact", color: "text-brand-accent", bg: "bg-brand-accent/10", border: "border-brand-accent/30" },
-  low: { label: "Low Impact", color: "text-brand-secondary", bg: "bg-brand-secondary/10", border: "border-brand-secondary/30" },
+  high: {
+    label: "High Impact",
+    color: "text-brand-primary",
+    bg: "bg-brand-primary/10",
+    border: "border-brand-primary/30",
+  },
+  medium: {
+    label: "Medium Impact",
+    color: "text-brand-accent",
+    bg: "bg-brand-accent/10",
+    border: "border-brand-accent/30",
+  },
+  low: {
+    label: "Low Impact",
+    color: "text-brand-secondary",
+    bg: "bg-brand-secondary/10",
+    border: "border-brand-secondary/30",
+  },
 };
 
 const DIFFICULTY_CONFIG = {
@@ -32,7 +55,9 @@ function RecommendationCard({ rec }: { rec: RecommendationItem }) {
     <Card className={`border ${impact.border}`} hoverable>
       <div className="flex items-start justify-between gap-4 mb-3">
         <h3 className="font-bold text-brand-text text-base leading-snug">{rec.title}</h3>
-        <span className={`shrink-0 text-xs font-bold px-2.5 py-1 rounded-full ${impact.bg} ${impact.color}`}>
+        <span
+          className={`shrink-0 text-xs font-bold px-2.5 py-1 rounded-full ${impact.bg} ${impact.color}`}
+        >
           {impact.label}
         </span>
       </div>
@@ -42,7 +67,10 @@ function RecommendationCard({ rec }: { rec: RecommendationItem }) {
           <Award className="h-3.5 w-3.5" /> Difficulty:{" "}
           <span className={diff.color}>{diff.label}</span>
         </span>
-        <Link href={`/log?rec=${encodeURIComponent(rec.title)}`} className={`flex items-center gap-1 ${impact.color} hover:underline transition-all`}>
+        <Link
+          href={`/log?rec=${encodeURIComponent(rec.title)}`}
+          className={`flex items-center gap-1 ${impact.color} hover:underline transition-all`}
+        >
           Log this action <ChevronRight className="h-3.5 w-3.5" />
         </Link>
       </div>
@@ -66,9 +94,12 @@ export default function InsightsPage() {
   };
 
   useEffect(() => {
-    if (!user) { router.push("/"); return; }
+    if (!user) {
+      router.push("/");
+      return;
+    }
     loadInsights();
-  }, [user]);
+  }, [user, router]);
 
   async function loadInsights() {
     setLoading(true);
@@ -91,7 +122,9 @@ export default function InsightsPage() {
       const data = await api.generateInsights();
       setInsights(data);
     } catch (err: any) {
-      setError("Failed to generate recommendations. Please ensure your baseline and recent logs are set up.");
+      setError(
+        "Failed to generate recommendations. Please ensure your baseline and recent logs are set up."
+      );
     } finally {
       setGenerating(false);
     }
@@ -116,7 +149,8 @@ export default function InsightsPage() {
           </div>
           <h1 className="text-3xl font-extrabold text-brand-text">Weekly AI Insights</h1>
           <p className="text-brand-muted text-sm mt-1">
-            Personalized recommendations generated using your carbon baseline and recent activity logs.
+            Personalized recommendations generated using your carbon baseline and recent activity
+            logs.
           </p>
         </div>
         <Button
@@ -143,9 +177,14 @@ export default function InsightsPage() {
           </div>
           <h2 className="text-xl font-bold text-brand-text mb-2">No Insights Generated Yet</h2>
           <p className="text-brand-muted text-sm max-w-md mx-auto mb-6">
-            Click &quot;Generate My Insights&quot; to let Google Gemini analyse your activity logs and produce a personalised sustainability action plan.
+            Click &quot;Generate My Insights&quot; to let Google Gemini analyse your activity logs
+            and produce a personalised sustainability action plan.
           </p>
-          <Button onClick={handleGenerate} loading={generating} icon={<Sparkles className="h-4 w-4" />}>
+          <Button
+            onClick={handleGenerate}
+            loading={generating}
+            icon={<Sparkles className="h-4 w-4" />}
+          >
             Generate My Insights
           </Button>
         </Card>
@@ -158,7 +197,10 @@ export default function InsightsPage() {
           <div className="flex flex-wrap items-center gap-4 text-xs text-brand-muted font-semibold">
             <span className="flex items-center gap-1.5">
               <Clock className="h-3.5 w-3.5" />
-              Generated: {new Date(parseSafeDate(insights.createdAt)).toLocaleDateString("en-GB", { dateStyle: "long" })}
+              Generated:{" "}
+              {new Date(parseSafeDate(insights.createdAt)).toLocaleDateString("en-GB", {
+                dateStyle: "long",
+              })}
             </span>
             <span className="flex items-center gap-1.5">
               <TrendingUp className="h-3.5 w-3.5 text-brand-primary" />
@@ -173,8 +215,17 @@ export default function InsightsPage() {
               if (!count) return null;
               const cfg = IMPACT_CONFIG[imp];
               return (
-                <div key={imp} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold border ${cfg.bg} ${cfg.color} ${cfg.border}`}>
-                  {imp === "high" ? <Leaf className="h-3.5 w-3.5" /> : imp === "medium" ? <Zap className="h-3.5 w-3.5" /> : <TrendingUp className="h-3.5 w-3.5" />}
+                <div
+                  key={imp}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold border ${cfg.bg} ${cfg.color} ${cfg.border}`}
+                >
+                  {imp === "high" ? (
+                    <Leaf className="h-3.5 w-3.5" />
+                  ) : imp === "medium" ? (
+                    <Zap className="h-3.5 w-3.5" />
+                  ) : (
+                    <TrendingUp className="h-3.5 w-3.5" />
+                  )}
                   {count} {cfg.label}
                 </div>
               );
@@ -190,7 +241,8 @@ export default function InsightsPage() {
 
           {/* Disclaimer */}
           <p className="text-xs text-brand-muted text-center border-t border-brand-border/40 pt-6">
-            Recommendations are generated by Google Gemini (Vertex AI) and based on your personal activity data. Estimates use certified GHG Protocol emission factors.
+            Recommendations are generated by Google Gemini (Vertex AI) and based on your personal
+            activity data. Estimates use certified GHG Protocol emission factors.
           </p>
         </>
       )}

@@ -9,6 +9,7 @@ from app.models.domain.user import CarbonBaseline, ConsentInfo, UserPreferences
 
 class UserCreate(BaseModel):
     """Request schema for user registration."""
+
     email: EmailStr
     displayName: str
     consent: ConsentInfo
@@ -16,6 +17,7 @@ class UserCreate(BaseModel):
 
 class BaselineUpdate(BaseModel):
     """Request schema for updating carbon emission baselines."""
+
     transport: float
     energy: float
     diet: float
@@ -23,6 +25,7 @@ class BaselineUpdate(BaseModel):
 
 class UserResponse(BaseModel):
     """Response schema for user profile data."""
+
     userId: str
     email: EmailStr
     displayName: str

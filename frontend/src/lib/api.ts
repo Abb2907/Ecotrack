@@ -101,9 +101,9 @@ export const api = {
         consent: {
           dataProcessingAccepted: true,
           consentTimestamp: new Date().toISOString(),
-          consentVersion: "v1"
-        }
-      })
+          consentVersion: "v1",
+        },
+      }),
     });
     if (!response.ok) throw new Error(await response.text());
     return response.json();
@@ -124,7 +124,7 @@ export const api = {
     const response = await fetch(`${BACKEND_URL}/api/v1/auth/baseline`, {
       method: "PUT",
       headers,
-      body: JSON.stringify({ transport, energy, diet })
+      body: JSON.stringify({ transport, energy, diet }),
     });
     if (!response.ok) throw new Error(await response.text());
     return response.json();
@@ -133,7 +133,7 @@ export const api = {
   // Actions & Catalog Endpoints
   async getCatalog(category?: string): Promise<ActionItem[]> {
     const headers = await getHeaders();
-    const url = category 
+    const url = category
       ? `${BACKEND_URL}/api/v1/actions/catalog?category=${category}`
       : `${BACKEND_URL}/api/v1/actions/catalog`;
     const response = await fetch(url, {
@@ -149,7 +149,7 @@ export const api = {
     const response = await fetch(`${BACKEND_URL}/api/v1/actions/log`, {
       method: "POST",
       headers,
-      body: JSON.stringify({ actionId, date, quantity })
+      body: JSON.stringify({ actionId, date, quantity }),
     });
     if (!response.ok) throw new Error(await response.text());
     return response.json();
@@ -226,5 +226,5 @@ export const api = {
     });
     if (!response.ok) throw new Error(await response.text());
     return response.json();
-  }
+  },
 };

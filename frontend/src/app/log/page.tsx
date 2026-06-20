@@ -8,25 +8,46 @@ import { api, ActionItem, DailyLog } from "../../lib/api";
 import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import {
-  Car, Zap, Utensils, Plus, Trash2, CheckCircle2, AlertCircle,
-  Filter, Calendar, Loader2
+  Car,
+  Zap,
+  Utensils,
+  Plus,
+  Trash2,
+  CheckCircle2,
+  AlertCircle,
+  Filter,
+  Calendar,
+  Loader2,
 } from "lucide-react";
 
 const CATEGORY_CONFIG = {
-  transport: { label: "Transport", icon: Car, color: "text-brand-secondary", bg: "bg-brand-secondary/10" },
+  transport: {
+    label: "Transport",
+    icon: Car,
+    color: "text-brand-secondary",
+    bg: "bg-brand-secondary/10",
+  },
   energy: { label: "Energy", icon: Zap, color: "text-brand-accent", bg: "bg-brand-accent/10" },
   diet: { label: "Diet", icon: Utensils, color: "text-brand-primary", bg: "bg-brand-primary/10" },
 };
 
-function SearchParamHandler({ catalog, setSelectedAction, setActiveCategory }: { catalog: ActionItem[], setSelectedAction: any, setActiveCategory: any }) {
+function SearchParamHandler({
+  catalog,
+  setSelectedAction,
+  setActiveCategory,
+}: {
+  catalog: ActionItem[];
+  setSelectedAction: any;
+  setActiveCategory: any;
+}) {
   const searchParams = useSearchParams();
   const rec = searchParams.get("rec");
 
   useEffect(() => {
     if (rec && catalog.length > 0) {
       const search = rec.toLowerCase();
-      const words = search.split(/\s+/).filter(w => w.length > 3);
-      
+      const words = search.split(/\s+/).filter((w) => w.length > 3);
+
       let bestMatch: ActionItem | null = null;
       let maxScore = 0;
 
@@ -34,7 +55,7 @@ function SearchParamHandler({ catalog, setSelectedAction, setActiveCategory }: {
         let score = 0;
         const target = (action.title + " " + action.description).toLowerCase();
         for (const w of words) {
-           if (target.includes(w)) score++;
+          if (target.includes(w)) score++;
         }
         if (score > maxScore) {
           maxScore = score;
@@ -43,11 +64,11 @@ function SearchParamHandler({ catalog, setSelectedAction, setActiveCategory }: {
       }
 
       if (bestMatch) {
-         setSelectedAction(bestMatch);
-         setActiveCategory(bestMatch.category);
+        setSelectedAction(bestMatch);
+        setActiveCategory(bestMatch.category);
       } else if (catalog[0]) {
-         setSelectedAction(catalog[0]);
-         setActiveCategory(catalog[0].category);
+        setSelectedAction(catalog[0]);
+        setActiveCategory(catalog[0].category);
       }
     }
   }, [rec, catalog, setSelectedAction, setActiveCategory]);
@@ -72,9 +93,12 @@ export default function LogPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!user) { router.push("/"); return; }
+    if (!user) {
+      router.push("/");
+      return;
+    }
     loadData();
-  }, [user]);
+  }, [user, router]);
 
   async function loadData() {
     setLoading(true);
@@ -119,9 +143,8 @@ export default function LogPage() {
     }
   }
 
-  const filteredCatalog = activeCategory === "all"
-    ? catalog
-    : catalog.filter((a) => a.category === activeCategory);
+  const filteredCatalog =
+    activeCategory === "all" ? catalog : catalog.filter((a) => a.category === activeCategory);
 
   const totalSaved = logs.reduce((a, b) => a + b.co2Reduced, 0);
 
@@ -137,7 +160,11 @@ export default function LogPage() {
   return (
     <div className="space-y-8">
       <Suspense fallback={null}>
-        <SearchParamHandler catalog={catalog} setSelectedAction={setSelectedAction} setActiveCategory={setActiveCategory} />
+        <SearchParamHandler
+          catalog={catalog}
+          setSelectedAction={setSelectedAction}
+          setActiveCategory={setActiveCategory}
+        />
       </Suspense>
 
       <div>
@@ -150,21 +177,30 @@ export default function LogPage() {
       {/* Stats banner */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <Card className="py-4" hoverable={false}>
-          <p className="text-xs font-bold text-brand-muted uppercase tracking-wider">Today&apos;s Total Saved</p>
+          <p className="text-xs font-bold text-brand-muted uppercase tracking-wider">
+            Today&apos;s Total Saved
+          </p>
           <p className="text-2xl font-extrabold text-brand-primary mt-1">
-            {logs.filter(l => l.date === date).reduce((a, b) => a + b.co2Reduced, 0).toFixed(2)}{" "}
+            {logs
+              .filter((l) => l.date === date)
+              .reduce((a, b) => a + b.co2Reduced, 0)
+              .toFixed(2)}{" "}
             <span className="text-xs text-brand-muted font-normal">kg CO₂e</span>
           </p>
         </Card>
         <Card className="py-4" hoverable={false}>
-          <p className="text-xs font-bold text-brand-muted uppercase tracking-wider">All-Time Saved</p>
+          <p className="text-xs font-bold text-brand-muted uppercase tracking-wider">
+            All-Time Saved
+          </p>
           <p className="text-2xl font-extrabold text-brand-secondary mt-1">
             {totalSaved.toFixed(2)}{" "}
             <span className="text-xs text-brand-muted font-normal">kg CO₂e</span>
           </p>
         </Card>
         <Card className="py-4 hidden md:block" hoverable={false}>
-          <p className="text-xs font-bold text-brand-muted uppercase tracking-wider">Actions Logged</p>
+          <p className="text-xs font-bold text-brand-muted uppercase tracking-wider">
+            Actions Logged
+          </p>
           <p className="text-2xl font-extrabold text-brand-accent mt-1">{logs.length}</p>
         </Card>
       </div>
@@ -196,7 +232,9 @@ export default function LogPage() {
 
             <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
               {filteredCatalog.length === 0 && (
-                <p className="text-center text-brand-muted text-sm py-8">No actions in this category.</p>
+                <p className="text-center text-brand-muted text-sm py-8">
+                  No actions in this category.
+                </p>
               )}
               {filteredCatalog.map((action) => {
                 const cfg = CATEGORY_CONFIG[action.category];
@@ -213,11 +251,15 @@ export default function LogPage() {
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`h-8 w-8 rounded-lg ${cfg.bg} flex items-center justify-center shrink-0`}>
+                      <div
+                        className={`h-8 w-8 rounded-lg ${cfg.bg} flex items-center justify-center shrink-0`}
+                      >
                         <Icon className={`h-4 w-4 ${cfg.color}`} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-brand-text text-sm truncate">{action.title}</div>
+                        <div className="font-semibold text-brand-text text-sm truncate">
+                          {action.title}
+                        </div>
                         <div className="text-xs text-brand-muted">{action.description}</div>
                       </div>
                       <div className="text-right shrink-0">
@@ -267,7 +309,10 @@ export default function LogPage() {
 
             {/* Date */}
             <div className="space-y-1 mb-4">
-              <label htmlFor="log-date" className="text-xs font-bold text-brand-muted uppercase tracking-wider flex items-center gap-1">
+              <label
+                htmlFor="log-date"
+                className="text-xs font-bold text-brand-muted uppercase tracking-wider flex items-center gap-1"
+              >
                 <Calendar className="h-3 w-3" /> Date
               </label>
               <input
@@ -342,7 +387,9 @@ export default function LogPage() {
                         {log.actionId.replace(/_/g, " ")}
                       </td>
                       <td className="py-3 pr-4">
-                        <span className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-md ${cfg.bg} ${cfg.color}`}>
+                        <span
+                          className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-md ${cfg.bg} ${cfg.color}`}
+                        >
                           <Icon className="h-3 w-3" /> {cfg.label}
                         </span>
                       </td>
@@ -356,10 +403,11 @@ export default function LogPage() {
                           disabled={deletingId === log.logId}
                           className="p-1.5 rounded-lg text-brand-muted hover:text-brand-error hover:bg-brand-error/10 transition-all disabled:opacity-40"
                         >
-                          {deletingId === log.logId
-                            ? <Loader2 className="h-4 w-4 animate-spin" />
-                            : <Trash2 className="h-4 w-4" />
-                          }
+                          {deletingId === log.logId ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-4 w-4" />
+                          )}
                         </button>
                       </td>
                     </tr>

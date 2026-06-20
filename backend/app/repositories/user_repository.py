@@ -13,6 +13,7 @@ from app.repositories.base import BaseRepository
 
 class UserRepository(BaseRepository):
     """Repository for user profile and GDPR data operations."""
+
     async def get_user(self, user_id: str) -> User | None:
         """Retrieve a user profile by Firebase UID.
 

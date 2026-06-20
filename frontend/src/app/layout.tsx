@@ -20,8 +20,10 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "EcoTrack | Carbon Footprint Tracker & AI Reduction Advisor",
-  description: "Secure, accessible, and performant application to track personal daily carbon emissions and get personalized AI-driven sustainability recommendations.",
-  keywords: "sustainability, carbon footprint, carbon reduction, climate change, personal emissions tracking",
+  description:
+    "Secure, accessible, and performant application to track personal daily carbon emissions and get personalized AI-driven sustainability recommendations.",
+  keywords:
+    "sustainability, carbon footprint, carbon reduction, climate change, personal emissions tracking",
   authors: [{ name: "EcoTrack Team" }],
   icons: {
     icon: "/favicon.svg",
@@ -38,11 +40,7 @@ export const metadata: Metadata = {
  * @param props.children - Page content rendered within the layout.
  * @returns The root HTML structure with navigation and content area.
  */
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`dark ${outfit.variable} ${inter.variable}`}>
       <body className="flex flex-col min-h-screen bg-brand-dark text-brand-text antialiased">

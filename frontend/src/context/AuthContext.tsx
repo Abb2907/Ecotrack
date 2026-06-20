@@ -87,7 +87,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await signInWithPopup(auth, provider);
     } catch (error) {
       console.error("Google Sign-In Error (falling back to mock login in development):", error);
-      if (typeof window !== "undefined" && (process.env.NODE_ENV === "development" || window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
+      if (
+        typeof window !== "undefined" &&
+        (process.env.NODE_ENV === "development" ||
+          window.location.hostname === "localhost" ||
+          window.location.hostname === "127.0.0.1")
+      ) {
         await loginAsGuest();
         return;
       }
@@ -143,7 +148,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, loginWithGoogle, loginAsGuest, logout, refreshToken }}>
+    <AuthContext.Provider
+      value={{ user, token, loading, loginWithGoogle, loginAsGuest, logout, refreshToken }}
+    >
       {children}
     </AuthContext.Provider>
   );
