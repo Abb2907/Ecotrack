@@ -1,0 +1,37 @@
+# Next.js build output and dependencies
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Python dependencies and environments
+backend/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/*.pyd
+backend/.pytest_cache/
+backend/.coverage
+backend/htmlcov/
+backend/.env
+backend/venv/
+backend/env/
+backend/.venv/
+.venv/
+venv/
+env/
+
+# IDE / System files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+sa-key.json
+firebase-debug.log
+.firebase/
+

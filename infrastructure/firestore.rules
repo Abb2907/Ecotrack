@@ -1,0 +1,39 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // 1. Users Collection
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // 2. Actions Collection (Global read-only catalog)
+    match /actions/{actionId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Writes restricted to Admin SDK / Backend Server
+    }
+
+    // 3. Daily Logs Collection
+    match /logs/{logId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // 4. Weekly Insights Collection
+    match /weekly_insights/{insightId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow write: if false; // Weekly insights are generated exclusively by Backend Server via Vertex AI
+    }
+  }
+}

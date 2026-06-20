@@ -1,0 +1,159 @@
+# cloudbuild.yaml — EcoTrack CI/CD Pipeline
+# Triggered on push to 'main'. Runs tests, builds images, and deploys to Cloud Run.
+#
+# Required substitutions (set in Cloud Build trigger config):
+#   _PROJECT_ID        — GCP Project ID
+#   _REGION            — Cloud Run region (e.g. us-central1)
+#   _REGISTRY          — Artifact Registry hostname (e.g. us-central1-docker.pkg.dev)
+#   _REPO              — Artifact Registry repository name (e.g. ecotrack-images)
+#   _FIREBASE_API_KEY  — Firebase Web API Key (stored as Secret Manager secret)
+#   _FIREBASE_AUTH_DOMAIN
+#   _FIREBASE_PROJECT_ID
+#   _FIREBASE_APP_ID
+#   _BACKEND_URL       — Public URL of the deployed backend Cloud Run service
+
+substitutions:
+  _PROJECT_ID: "gen-lang-client-0849880096"
+  _REGION: "us-central1"
+  _REGISTRY: "us-central1-docker.pkg.dev"
+  _REPO: "ecotrack-images"
+  _BACKEND_SERVICE: "ecotrack-backend"
+  _FRONTEND_SERVICE: "ecotrack-frontend"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+steps:
+  # ─────────────────────────────────────────────────
+  # STAGE 1 — Backend: Lint + Unit Tests
+  # ─────────────────────────────────────────────────
+  - id: "backend-lint"
+    name: "python:3.11-slim"
+    dir: "backend"
+    entrypoint: "sh"
+    args:
+      - "-c"
+      - |
+        pip install --quiet ruff
+        ruff check app/ --select E,W,F --ignore E501
+
+  - id: "backend-test"
+    name: "python:3.11-slim"
+    dir: "backend"
+    entrypoint: "sh"
+    args:
+      - "-c"
+      - |
+        pip install --quiet -r requirements.txt
+        python -m pytest -q --tb=short
+    env:
+      - "ENVIRONMENT=development"
+      - "PROJECT_ID=ecotrack-test-project"
+      - "VERTEX_AI_LOCATION=us-central1"
+      - "ANONYMIZATION_KEY_SECRET_NAME=anonymization-hmac-key"
+      - "FIRESTORE_EMULATOR_HOST=localhost:8080"
+
+  # ─────────────────────────────────────────────────
+  # STAGE 2 — Build Docker Images
+  # ─────────────────────────────────────────────────
+  - id: "build-backend"
+    name: "gcr.io/cloud-builders/docker"
+    dir: "backend"
+    waitFor: ["backend-test"]
+    args:
+      - "build"
+      - "-t"
+      - "$_REGISTRY/$_PROJECT_ID/$_REPO/backend:$SHORT_SHA"
+      - "-t"
+      - "$_REGISTRY/$_PROJECT_ID/$_REPO/backend:latest"
+      - "."
+
+  - id: "build-frontend"
+    name: "gcr.io/cloud-builders/docker"
+    dir: "frontend"
+    waitFor: ["backend-test"]   # Frontend build can run in parallel with backend image build
+    args:
+      - "build"
+      - "--build-arg"
+      - "NEXT_PUBLIC_FIREBASE_API_KEY=$$FIREBASE_API_KEY"
+      - "--build-arg"
+      - "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=$_PROJECT_ID.firebaseapp.com"
+      - "--build-arg"
+      - "NEXT_PUBLIC_FIREBASE_PROJECT_ID=$_PROJECT_ID"
+      - "--build-arg"
+      - "NEXT_PUBLIC_FIREBASE_APP_ID=$$FIREBASE_APP_ID"
+      - "--build-arg"
+      - "NEXT_PUBLIC_BACKEND_URL=https://$_BACKEND_SERVICE-$_PROJECT_ID.$_REGION.run.app"
+      - "-t"
+      - "$_REGISTRY/$_PROJECT_ID/$_REPO/frontend:$SHORT_SHA"
+      - "-t"
+      - "$_REGISTRY/$_PROJECT_ID/$_REPO/frontend:latest"
+      - "."
+    secretEnv: ["FIREBASE_API_KEY", "FIREBASE_APP_ID"]
+
+  # ─────────────────────────────────────────────────
+  # STAGE 3 — Push Images to Artifact Registry
+  # ─────────────────────────────────────────────────
+  - id: "push-backend"
+    name: "gcr.io/cloud-builders/docker"
+    waitFor: ["build-backend"]
+    args: ["push", "--all-tags", "$_REGISTRY/$_PROJECT_ID/$_REPO/backend"]
+
+  - id: "push-frontend"
+    name: "gcr.io/cloud-builders/docker"
+    waitFor: ["build-frontend"]
+    args: ["push", "--all-tags", "$_REGISTRY/$_PROJECT_ID/$_REPO/frontend"]
+
+  # ─────────────────────────────────────────────────
+  # STAGE 4 — Deploy to Cloud Run
+  # ─────────────────────────────────────────────────
+  - id: "deploy-backend"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    waitFor: ["push-backend"]
+    entrypoint: "gcloud"
+    args:
+      - "run"
+      - "deploy"
+      - "$_BACKEND_SERVICE"
+      - "--image=$_REGISTRY/$_PROJECT_ID/$_REPO/backend:$SHORT_SHA"
+      - "--region=$_REGION"
+      - "--platform=managed"
+      - "--allow-unauthenticated"
+      - "--service-account=ecotrack-backend-sa@$_PROJECT_ID.iam.gserviceaccount.com"
+      - "--set-env-vars=ENVIRONMENT=production,PROJECT_ID=$_PROJECT_ID,VERTEX_AI_LOCATION=$_REGION"
+      - "--min-instances=1"
+      - "--max-instances=10"
+      - "--memory=512Mi"
+      - "--cpu=1"
+      - "--concurrency=80"
+      - "--timeout=30"
+
+  - id: "deploy-frontend"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    waitFor: ["push-frontend"]
+    entrypoint: "gcloud"
+    args:
+      - "run"
+      - "deploy"
+      - "$_FRONTEND_SERVICE"
+      - "--image=$_REGISTRY/$_PROJECT_ID/$_REPO/frontend:$SHORT_SHA"
+      - "--region=$_REGION"
+      - "--platform=managed"
+      - "--allow-unauthenticated"
+      - "--min-instances=0"
+      - "--max-instances=5"
+      - "--memory=256Mi"
+      - "--cpu=1"
+      - "--timeout=30"
+
+# Pull Firebase credentials from Secret Manager at build time
+availableSecrets:
+  secretManager:
+    - versionName: "projects/$_PROJECT_ID/secrets/firebase-api-key/versions/latest"
+      env: "FIREBASE_API_KEY"
+    - versionName: "projects/$_PROJECT_ID/secrets/firebase-app-id/versions/latest"
+      env: "FIREBASE_APP_ID"
+
+images:
+  - "$_REGISTRY/$_PROJECT_ID/$_REPO/backend:$SHORT_SHA"
+  - "$_REGISTRY/$_PROJECT_ID/$_REPO/frontend:$SHORT_SHA"

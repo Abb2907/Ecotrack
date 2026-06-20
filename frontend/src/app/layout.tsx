@@ -1,0 +1,33 @@
+import React from "react";
+import type { Metadata } from "next";
+import { AuthProvider } from "../context/AuthContext";
+import Navbar from "../components/layout/Navbar";
+import Footer from "../components/layout/Footer";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "EcoTrack | Carbon Footprint Tracker & AI Reduction Advisor",
+  description: "Secure, accessible, and performant application to track personal daily carbon emissions and get personalized AI-driven sustainability recommendations.",
+  keywords: "sustainability, carbon footprint, carbon reduction, climate change, personal emissions tracking",
+  authors: [{ name: "EcoTrack Team" }],
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en" className="dark">
+      <body className="flex flex-col min-h-screen bg-brand-dark text-brand-text antialiased">
+        <AuthProvider>
+          <Navbar />
+          <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {children}
+          </main>
+          <Footer />
+        </AuthProvider>
+      </body>
+    </html>
+  );
+}
