@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { api, WeeklyInsights, RecommendationItem } from "../../lib/api";
 import Card from "../../components/common/Card";
@@ -41,9 +42,9 @@ function RecommendationCard({ rec }: { rec: RecommendationItem }) {
           <Award className="h-3.5 w-3.5" /> Difficulty:{" "}
           <span className={diff.color}>{diff.label}</span>
         </span>
-        <button className={`flex items-center gap-1 ${impact.color} hover:underline transition-all`}>
+        <Link href={`/log?rec=${encodeURIComponent(rec.title)}`} className={`flex items-center gap-1 ${impact.color} hover:underline transition-all`}>
           Log this action <ChevronRight className="h-3.5 w-3.5" />
-        </button>
+        </Link>
       </div>
     </Card>
   );
@@ -151,7 +152,7 @@ export default function InsightsPage() {
           <div className="flex flex-wrap items-center gap-4 text-xs text-brand-muted font-semibold">
             <span className="flex items-center gap-1.5">
               <Clock className="h-3.5 w-3.5" />
-              Generated: {new Date(insights.createdAt).toLocaleDateString("en-GB", { dateStyle: "long" })}
+              Generated: {new Date(insights.createdAt || Date.now()).toLocaleDateString("en-GB", { dateStyle: "long" })}
             </span>
             <span className="flex items-center gap-1.5">
               <TrendingUp className="h-3.5 w-3.5 text-brand-primary" />

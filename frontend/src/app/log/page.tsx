@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { api, ActionItem, DailyLog } from "../../lib/api";
 import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
@@ -16,6 +17,43 @@ const CATEGORY_CONFIG = {
   energy: { label: "Energy", icon: Zap, color: "text-brand-accent", bg: "bg-brand-accent/10" },
   diet: { label: "Diet", icon: Utensils, color: "text-brand-primary", bg: "bg-brand-primary/10" },
 };
+
+function SearchParamHandler({ catalog, setSelectedAction, setActiveCategory }: { catalog: ActionItem[], setSelectedAction: any, setActiveCategory: any }) {
+  const searchParams = useSearchParams();
+  const rec = searchParams.get("rec");
+
+  useEffect(() => {
+    if (rec && catalog.length > 0) {
+      const search = rec.toLowerCase();
+      const words = search.split(/\s+/).filter(w => w.length > 3);
+      
+      let bestMatch: ActionItem | null = null;
+      let maxScore = 0;
+
+      for (const action of catalog) {
+        let score = 0;
+        const target = (action.title + " " + action.description).toLowerCase();
+        for (const w of words) {
+           if (target.includes(w)) score++;
+        }
+        if (score > maxScore) {
+          maxScore = score;
+          bestMatch = action;
+        }
+      }
+
+      if (bestMatch) {
+         setSelectedAction(bestMatch);
+         setActiveCategory(bestMatch.category);
+      } else {
+         setSelectedAction(catalog[0]);
+         setActiveCategory(catalog[0].category);
+      }
+    }
+  }, [rec, catalog, setSelectedAction, setActiveCategory]);
+
+  return null;
+}
 
 export default function LogPage() {
   const { user } = useAuth();
@@ -98,6 +136,10 @@ export default function LogPage() {
 
   return (
     <div className="space-y-8">
+      <Suspense fallback={null}>
+        <SearchParamHandler catalog={catalog} setSelectedAction={setSelectedAction} setActiveCategory={setActiveCategory} />
+      </Suspense>
+
       <div>
         <h1 className="text-3xl font-extrabold text-brand-text">Log Daily Actions</h1>
         <p className="text-brand-muted text-sm mt-1">
