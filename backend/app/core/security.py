@@ -53,6 +53,7 @@ async def get_firebase_public_keys() -> dict[str, str]:
                 )
     return keys_cache
 
+
 async def verify_firebase_token(token: str) -> dict[str, Any]:
     """Decode and verify a Firebase ID token.
 

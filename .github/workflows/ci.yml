@@ -132,7 +132,7 @@ jobs:
           NEXT_PUBLIC_FIREBASE_APP_ID: dummy-app-id
           NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: dummy-auth-domain
       - name: Run Lighthouse CI
-        uses: treosh/lighthouse-ci-action@v10
+        uses: treosh/lighthouse-ci-action@v12
         with:
           configPath: './frontend/lighthouserc.json'
           uploadArtifacts: true
