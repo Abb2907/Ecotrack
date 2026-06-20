@@ -99,6 +99,7 @@ export default function InsightsPage() {
       return;
     }
     loadInsights();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, router]);
 
   async function loadInsights() {

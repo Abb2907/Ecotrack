@@ -71,6 +71,7 @@ function SearchParamHandler({
         setActiveCategory(catalog[0].category);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rec, catalog, setSelectedAction, setActiveCategory]);
 
   return null;
@@ -98,6 +99,7 @@ export default function LogPage() {
       return;
     }
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, router]);
 
   async function loadData() {

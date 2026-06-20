@@ -1,6 +1,7 @@
 /**
  * @jest-environment jsdom
  */
+/* eslint-disable react/display-name */
 import React from "react";
 import { render, screen } from "@testing-library/react";
 
