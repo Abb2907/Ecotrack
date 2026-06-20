@@ -59,6 +59,12 @@ export default function InsightsPage() {
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const parseSafeDate = (d: any) => {
+    if (!d) return Date.now();
+    const parsed = new Date(d);
+    return isNaN(parsed.getTime()) ? Date.now() : parsed;
+  };
+
   useEffect(() => {
     if (!user) { router.push("/"); return; }
     loadInsights();
@@ -152,7 +158,7 @@ export default function InsightsPage() {
           <div className="flex flex-wrap items-center gap-4 text-xs text-brand-muted font-semibold">
             <span className="flex items-center gap-1.5">
               <Clock className="h-3.5 w-3.5" />
-              Generated: {new Date(insights.createdAt || Date.now()).toLocaleDateString("en-GB", { dateStyle: "long" })}
+              Generated: {new Date(parseSafeDate(insights.createdAt)).toLocaleDateString("en-GB", { dateStyle: "long" })}
             </span>
             <span className="flex items-center gap-1.5">
               <TrendingUp className="h-3.5 w-3.5 text-brand-primary" />

@@ -61,6 +61,7 @@ User Carbon Baseline (kg CO2/month):
 User's Logged Carbon Reduction Actions this Week:
 {json.dumps(recent_logs)}
 
+CRITICAL: Do NOT recommend actions that the user has already logged in their recent weekly actions. Suggest completely NEW habits.
 Return recommendations that target their highest emission categories. Ensure they are safe, actionable, and specific."""
 
             # Enforce structured output via Pydantic model response schema
@@ -72,14 +73,15 @@ Return recommendations that target their highest emission categories. Ensure the
                         "items": {
                             "type": "OBJECT",
                             "properties": {
-                                "what": {"type": "STRING"},
-                                "why": {"type": "STRING"},
+                                "title": {"type": "STRING", "description": "Short, action-oriented title."},
+                                "description": {"type": "STRING", "description": "Why it matters, tied directly to the user's highest emission source."},
                                 "estimatedCO2Reduction": {"type": "NUMBER"},
                                 "estimatedCostImpact": {"type": "STRING"},
-                                "difficulty": {"type": "STRING"},
+                                "impact": {"type": "STRING", "description": "Impact level: 'high' | 'medium' | 'low'."},
+                                "difficulty": {"type": "STRING", "description": "Difficulty level: 'easy' | 'moderate' | 'hard'."},
                                 "timeframe": {"type": "STRING"},
                             },
-                            "required": ["what", "why", "estimatedCO2Reduction", "estimatedCostImpact", "difficulty", "timeframe"],
+                            "required": ["title", "description", "estimatedCO2Reduction", "estimatedCostImpact", "impact", "difficulty", "timeframe"],
                         }
                     }
                 },

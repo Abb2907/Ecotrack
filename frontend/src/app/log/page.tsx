@@ -45,7 +45,7 @@ function SearchParamHandler({ catalog, setSelectedAction, setActiveCategory }: {
       if (bestMatch) {
          setSelectedAction(bestMatch);
          setActiveCategory(bestMatch.category);
-      } else {
+      } else if (catalog[0]) {
          setSelectedAction(catalog[0]);
          setActiveCategory(catalog[0].category);
       }

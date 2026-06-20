@@ -31,13 +31,13 @@ async def get_latest_insights(
 
     return docs[0].to_dict()
 
-@router.post("/generate", response_model=WeeklyRecommendations)
+@router.post("/generate", response_model=Dict[str, Any])
 async def generate_insights(
     current_user_claims: Dict[str, str] = Depends(get_current_user),
     user_repo: UserRepository = Depends(UserRepository),
     action_repo: ActionRepository = Depends(ActionRepository),
     vertex_client: VertexAIClient = Depends(get_vertex_client)
-) -> WeeklyRecommendations:
+) -> Dict[str, Any]:
     uid = current_user_claims["uid"]
 
     # 1. Fetch user to retrieve baseline info
@@ -83,4 +83,4 @@ async def generate_insights(
 
     await user_repo.insights_ref.document(insight_id).set(insight_doc)
 
-    return recommendations_result
+    return insight_doc
