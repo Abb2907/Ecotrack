@@ -8,11 +8,11 @@ import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import {
   Shield, Download, Trash2, UndoDot, AlertCircle, CheckCircle2,
-  FileJson, Loader2, Info
+  FileJson, Info
 } from "lucide-react";
 
 export default function PrivacyPage() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
   const [exportLoading, setExportLoading] = useState(false);

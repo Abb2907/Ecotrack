@@ -26,7 +26,7 @@ export default function LogPage() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [selectedAction, setSelectedAction] = useState<ActionItem | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
-  const [date, setDate] = useState<string>(new Date().toISOString().split("T")[0]);
+  const [date, setDate] = useState<string>(new Date().toISOString().split("T")[0] || "");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);

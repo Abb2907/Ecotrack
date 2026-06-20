@@ -7,7 +7,7 @@ import { useAuth } from "../../context/AuthContext";
 import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import {
-  Car, Zap, Utensils, Calculator, Loader2, AlertCircle, BarChart3,
+  Car, Zap, Utensils, Calculator, AlertCircle, BarChart3,
   ArrowRight
 } from "lucide-react";
 
