@@ -2,7 +2,7 @@
 
 EcoTrack is a production-grade web application to help individuals understand, track, and reduce their carbon footprint.
 
-🚀 **Live App:** [https://ecotrack-frontend-42cnhcimzq-uc.a.run.app](https://ecotrack-frontend-42cnhcimzq-uc.a.run.app)
+🚀 **Live App:** [https://ecotrack-frontend-361013050235.us-central1.run.app/](https://ecotrack-frontend-361013050235.us-central1.run.app/)
 
 ## Tech Stack
 - **Frontend**: Next.js (React) + TypeScript + Tailwind CSS
