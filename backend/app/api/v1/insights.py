@@ -4,7 +4,7 @@ from typing import Dict, List, Any
 from app.core.security import get_current_user
 from app.repositories.user_repository import UserRepository
 from app.repositories.action_repository import ActionRepository
-from app.services.vertex_client import VertexAIClient, WeeklyRecommendations
+from app.services.vertex_client import VertexAIClient
 
 router = APIRouter(prefix="/insights", tags=["Insights & AI Recommendations"])
 
