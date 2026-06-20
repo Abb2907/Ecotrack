@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
-import { api } from "../../lib/api";
+
 import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import {
